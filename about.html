@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="关于 Yank 和这个博客。">
+  <meta name="description" content="Yank 的个人介绍。">
   <title>关于 - Yank's Blog</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -14,23 +14,62 @@
       <a href="index.html">首页</a>
       <a href="posts.html">文章</a>
       <a href="about.html">关于</a>
+      <a href="project.html">项目</a>
       <a href="links.html">友人帐</a>
     </nav>
   </header>
 
-  <main class="page narrow">
-    <p class="eyebrow">About</p>
-    <h1>关于这个博客</h1>
-    <p> 一个可以是技术笔记、生活记录和想法仓库的小项目。</p>
-    <p>网站现在是纯静态结构，非常简单，没有复杂框架，想改哪里就改就改哪里。</p>
-    <p>目前仍在搭建中...</p>
+  <main class="page about-page">
+    <div class="profile-card">
+      <div class="profile-avatar">
+        <img src="assets/profile.jpg" alt="的头像">
+      </div>
+      <div class="profile-info">
+        <h1>Yank</h1>
+        <p class="profile-bio">爱折腾的大一小登，喜欢整点小玩意。</p>
+        <div class="social-links">
+          <a href="https://github.com/Yank233" class="social-link" target="_blank">GitHub</a>
+          <a href="https://space.bilibili.com/1472106962" class="social-link" target="_blank">Bilibili</a>
+        </div>
+      </div>
+    </div>
 
-    <section class="note">
-      <h2>未来会加的东西</h2>
+    <!-- 关于博客 -->
+    <section class="about-section">
+      <h2>📝 关于这个博客</h2>
+      <p>一个可以写技术笔记、生活记录和想法仓库的小项目。网站现在是纯静态结构，没有复杂框架，想改哪里就改哪里。</p>
+    </section>
+
+    <!-- 技能/标签 -->
+    <section class="about-section">
+      <h2>🛠️ 技术栈</h2>
+      <div class="skills">
+        <span class="skill-tag">HTML / CSS</span>
+        <span class="skill-tag">JavaScript</span>
+      </div>
+    </section>
+
+    <!-- 状态/日常 -->
+    <section class="about-section">
+      <h2>⚡ 状态</h2>
+      <ul class="status-list">
+        <li>🔨 正在做：博客页面优化、项目展示页</li>
+        <li>📖 最近在学：前端，算法竞赛</li>
+        <li>🎯 下一个目标：给博客加背景音乐和歌单</li>
+      </ul>
+    </section>
+
+    <section class="about-section murmur-section">
+      <h2>💭 碎碎念</h2>
+      <div class="murmur-grid" id="murmurGrid"></div>
+    </section>
+
+    <section class="about-section note">
+      <h2>📬 联系我</h2>
+      <p>如果有什么想聊的，可以通过下面的方式找到我：</p>
       <ul>
-        <li>背景音乐</li>
-        <li>项目展示页</li>
-        <li>翻新css</li>
+        <li>GitHub: <a href="https://github.com/Yank233">@Yank233</a></li>
+        <li>邮箱: <a href="mailto:3051258379@qq.com">3051258379@qq.com</a></li>
       </ul>
     </section>
   </main>
@@ -39,5 +78,6 @@
     <p>© 2026 Yank.</p>
   </footer>
   <script src="js/GETBACK.js"></script>
+  <script src="js/B_word.js"></script>
 </body>
 </html>
