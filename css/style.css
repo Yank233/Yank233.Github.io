@@ -225,6 +225,7 @@ li {
 .site-footer p {
   margin: 0;
   font-size: .95rem;
+  text-align: right;
 }
 
 .links-list {
