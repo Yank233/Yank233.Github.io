@@ -6,9 +6,6 @@
   let audio = null;
   let ui = {};
   let currentLyrics = [];
-  let lyricsLineMap = {};
-
-  const STORAGE_KEY = 'yank_player_state';
 
   function loadPlaylist() {
     const base = getBase();
@@ -18,25 +15,11 @@
       try {
         playlist = JSON.parse(xhr.responseText);
         if (playlist.length > 0) {
-          restoreState();
           renderPlaylist();
-          return;
         }
       } catch (_) { /* fall through */ }
-      playlist = fallbackPlaylist();
-      renderPlaylist();
-    };
-    xhr.onerror = function () {
-      playlist = fallbackPlaylist();
-      renderPlaylist();
     };
     xhr.send();
-  }
-
-  function fallbackPlaylist() {
-    return [
-      { title: 'Billie Jean?', artist: '21 Clown', file: 'Billie Jean.mp3' }
-    ];
   }
 
   function getBase() {
@@ -101,7 +84,6 @@
     if (!lrc) return [];
     const lines = lrc.split('\n');
     const result = [];
-    const lineMap = {};
     lines.forEach(function (line) {
       const match = line.match(/\[(\d+):(\d+)\.(\d+)\](.*)/);
       if (match) {
@@ -208,7 +190,6 @@
     ui.title.textContent = song.title;
     ui.artist.textContent = song.artist;
     renderPlaylist();
-    saveState();
   }
 
   function onMetadata() {
@@ -259,48 +240,8 @@
     audio.currentTime = pct * audio.duration;
   }
 
-  function saveState() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        index: currentIndex,
-        time: audio ? audio.currentTime : 0,
-        volume: parseFloat(ui.volume.value),
-      }));
-    } catch (_) { /* noop */ }
-  }
-
-  function restoreState() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const state = JSON.parse(raw);
-      if (state.index !== undefined && state.index < playlist.length) {
-        currentIndex = state.index;
-      }
-      if (state.volume !== undefined) {
-        ui.volume.value = state.volume;
-      }
-    } catch (_) { /* noop */ }
-  }
-
-  window.addEventListener('beforeunload', saveState);
-
   function init() {
     buildUI();
-
-    var isFileProtocol = window.location.protocol === 'file:';
-    if (isFileProtocol) {
-      ui.title.textContent = '需要 Web 服务器';
-      ui.artist.textContent = '请用 Live Server 或 python 启动';
-      ui.playBtn.disabled = true;
-      ui.playBtn.textContent = '⛔';
-      ui.playBtn.title = 'file:// 协议不支持音频播放';
-      ui.prevBtn.disabled = true;
-      ui.nextBtn.disabled = true;
-      ui.volume.disabled = true;
-      return;
-    }
-
     ui.playBtn.addEventListener('click', togglePlay);
     ui.prevBtn.addEventListener('click', prevTrack);
     ui.nextBtn.addEventListener('click', nextTrack);

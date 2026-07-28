@@ -33,4 +33,6 @@
   } else {
     initScrollAnimations();
   }
+
+  window.__initAnimations = initScrollAnimations;
 })();

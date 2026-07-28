@@ -13,8 +13,10 @@
 ├── css/
 │   └── style.css           # 全站样式
 ├── js/
-│   ├── GETBACK.js          # 标题切换
-│   └── murmur.js           # 碎碎念展示
+│   ├── B_word.js           # 碎碎念
+│   ├── animations.js       # 滚动入场动画
+│   ├── player.js           # 背景音乐播放器
+│   └── nav.js              # 无刷新页面导航
 ├── assets/
 │   └── profile.jpg         # 头像
 ├── .gitignore

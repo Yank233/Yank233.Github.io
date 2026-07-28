@@ -44,3 +44,5 @@ function renderMurmurs() {
 }
 
 document.addEventListener('DOMContentLoaded', renderMurmurs);
+
+window.__renderMurmurs = renderMurmurs;
