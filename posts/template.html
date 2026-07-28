@@ -1,10 +1,10 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="我的第一篇自建博客文章。">
-  <title>我的第一篇自建博客文章 - Yank's Blog</title>
+  <meta name="description" content="{{DESCRIPTION}}">
+  <title>{{TITLE}} - Yank's Blog</title>
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -23,21 +23,13 @@
     <a class="back-link" href="../posts.html">← 返回文章列表</a>
     <article>
       <header class="article-header">
-        <p class="eyebrow">2026-06-04</p>
-        <h1>我的第一篇自建博客文章</h1>
-        <p class="summary">由于用Hexo有点预制的感觉，所以决定从零开始搓一个轻量化的、好维护的小网站。</p>
+        <p class="eyebrow">{{DATE}}</p>
+        <h1>{{TITLE}}</h1>
+        <p class="summary">{{DESCRIPTION}}</p>
       </header>
 
-      <p>我想要一个更简单、更可控的个人站点。于是含泪删掉捣鼓半天的Hexo文件，只保留 GitHub Pages 需要的静态文件。</p>
-      <p>以后添加文章时，只需要复制这篇文章的 HTML 文件，修改标题、日期和正文，再把入口加到首页和文章列表里。</p>
+      {{CONTENT}}
 
-      <h2>下一步</h2>
-      <p>我可以继续加入项目展示、主题切换，总之等我想起来搞吧。</p>
-
-      <!--
-      评论
-      接入 Giscus、Waline 或 Twikoo，脚本位置。
-      -->
     </article>
   </main>
 
