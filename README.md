@@ -23,6 +23,10 @@
 └── README.md
 ```
 
+### 👀 访问统计
+
+页脚使用 [不蒜子](https://busuanzi.ibruce.info/) 统计全站浏览数与访客数，无需注册后端，引入脚本即可。
+
 ### 🚀 推送到 GitHub Pages
 
 更新博客：

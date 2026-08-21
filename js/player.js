@@ -19,6 +19,9 @@
         }
       } catch (_) { /* fall through */ }
     };
+    xhr.onerror = function () {
+      ui.explain.textContent = '歌单加载失败';
+    };
     xhr.send();
   }
 
