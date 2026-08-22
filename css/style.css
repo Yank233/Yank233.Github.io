@@ -191,6 +191,16 @@ p, li {
   line-height: 1.85;
 }
 
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  color: var(--accent-strong);
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
 .hero-text {
   max-width: 640px;
   font-size: 1.1rem;

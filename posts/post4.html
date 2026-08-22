@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Python 项目里 .venv 虚拟环境的创建、管理与清理经验。">
+  <title>.venv 虚拟环境管理 - Yank's Blog</title>
+  <link rel="stylesheet" href="../css/style.css?v=7">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../index.html">Yank's Blog</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../index.html">首页</a>
+      <a href="../posts.html">文章</a>
+      <a href="../about.html">关于</a>
+      <a href="../project.html">项目</a>
+      <a href="../links.html">友链</a>
+    </nav>
+  </header>
+
+  <main class="article">
+    <a class="back-link" href="../posts.html">← 返回文章列表</a>
+    <article>
+      <header class="article-header">
+        <p class="eyebrow">2026-08-22</p>
+        <h1>.venv 虚拟环境管理</h1>
+        <p class="summary">虽然还没到依赖互相打架的地步，但好习惯要提前养成，这样传Github的也不至于是依托彻底的大粪</p>
+      </header>
+
+      <p>刚开始全都是全局pip装包，万一某个项目要 requests 2.x、另一个要 3.x，装来装去把系统环境搞成一锅粥。</p>
+
+      <h2>创建与激活</h2>
+      <p>Python 3.3+ 自带 venv 模块，不需要额外安装。在项目根目录执行：</p>
+      <p><code>python -m venv .venv</code></p>
+      <p>Windows 下激活：<code>.venv\Scripts\activate</code></p>
+      <p>激活后命令行提示符会多出 <code>(.venv)</code> 前缀，这时 <code>pip install</code> 装的所有包都会进到 .venv 里，而不是全局。</p>
+
+      <h2>依赖管理</h2>
+      <p>装好依赖后立刻导出清单，方便换机器或重建环境：</p>
+      <p><code>pip freeze &gt; requirements.txt</code></p>
+      <p>换到新环境后一条命令装回来：<code>pip install -r requirements.txt</code>。requirements.txt 应该提交到 git，这样别人克隆仓库后能一键复现。</p>
+
+      <h2>清理与重建</h2>
+      <p>.venv 目录本身不提交到 git（加进 .gitignore 即可）。如果环境装坏了，最省事的办法是直接删掉重建：</p>
+      <p><code>rm -rf .venv</code> 然后重新 <code>python -m venv .venv</code></p>
+      <p>反正依赖都在 requirements.txt 里，重建成本很低。这也是"一切皆可重来"的底气。</p>
+
+      <!--
+      评论
+      接入 Giscus、Waline 或 Twikoo，脚本位置。
+      -->
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <p>© 2026 Yank.</p>
+    <span class="busuanzi">
+      <span id="busuanzi_value_site_pv">·</span> 次浏览 · <span id="busuanzi_value_site_uv">·</span> 位访客
+    </span>
+  </footer>
+  <script src="../js/player.js?v=5"></script>
+  <script src="../js/nav.js?v=5"></script>
+  <script src="../js/animations.js?v=5"></script>
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</body>
+</html>
