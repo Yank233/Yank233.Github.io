@@ -24,7 +24,13 @@
 
     els.forEach(function (el) {
       el.classList.add('animate-ready');
-      observer.observe(el);
+      // 已在视口内的元素立即入场，避免依赖 IntersectionObserver 首次回调
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) {
+        el.classList.add('animate-in');
+      } else {
+        observer.observe(el);
+      }
     });
   }
 

@@ -39,7 +39,37 @@ body {
   font-family: var(--font-display);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  padding-bottom: 64px; /* 给固定播放器留出空间，避免遮挡页脚 */
+  padding-bottom: 112px;
+}
+
+/* 播放时的背景视觉反馈 — 模糊晃动的黄铜光效
+   播放时渐显、暂停/结束时渐隐，光斑缓慢晃动 */
+.player-glow {
+  position: fixed;
+  inset: -25%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.8s ease;
+  background:
+    radial-gradient(ellipse 45% 38% at 28% 18%, rgba(176, 141, 87, 0.36), transparent 70%),
+    radial-gradient(ellipse 40% 32% at 72% 22%, rgba(212, 180, 131, 0.24), transparent 70%),
+    radial-gradient(ellipse 60% 45% at 50% 45%, rgba(176, 141, 87, 0.14), transparent 70%);
+  filter: blur(48px);
+  animation: glow-sway 10s ease-in-out infinite;
+}
+
+body.playing .player-glow { opacity: 1; }
+
+@keyframes glow-sway {
+  0%, 100% { transform: translate3d(-2.5%, -1%, 0) rotate(0deg); }
+  25%      { transform: translate3d(1.5%, 2%, 0) rotate(0.8deg); }
+  50%      { transform: translate3d(2.5%, 0.5%, 0) rotate(-0.8deg); }
+  75%      { transform: translate3d(-1%, 2.5%, 0) rotate(1.2deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .player-glow { animation: none; }
 }
 
 /* 极淡胶片颗粒 */
@@ -719,10 +749,12 @@ code {
   left: 0;
   right: 0;
   z-index: 999;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(140px, 200px) minmax(300px, 1fr) minmax(220px, 300px) auto;
+  grid-template-areas: "info controls lyrics extras";
   align-items: center;
   gap: 16px;
-  padding: 10px 22px;
+  padding: 12px 22px;
   background: rgba(20, 19, 16, 0.92);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -731,7 +763,8 @@ code {
 }
 
 .player-info {
-  min-width: 140px;
+  grid-area: info;
+  min-width: 0;
   max-width: 200px;
   white-space: nowrap;
   overflow: hidden;
@@ -750,10 +783,18 @@ code {
 }
 
 .player-controls {
+  grid-area: controls;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.player-transport {
   display: flex;
   align-items: center;
-  gap: 6px;
-  flex: 1;
+  gap: 2px;
 }
 
 .player-btn {
@@ -787,7 +828,7 @@ code {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex: 1;
+  min-width: 0;
 }
 
 .player-time {
@@ -799,14 +840,27 @@ code {
 }
 
 .player-progress {
-  flex: 1;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
   height: 3px;
   background: var(--line);
   border-radius: 1px;
-  cursor: pointer;
   position: relative;
-  min-width: 60px;
+  pointer-events: none;
 }
+
+.player-progress::before {
+  content: '';
+  position: absolute;
+  top: -7px;
+  bottom: -7px;
+  left: 0;
+  right: 0;
+}
+
+/* 拖动时禁止文本选择 */
+body.seeking * { user-select: none !important; }
 
 .player-progress-fill {
   height: 100%;
@@ -826,11 +880,13 @@ code {
   transition: transform 0.15s var(--ease);
 }
 
+/* Playback progress is display-only. */
 .player-progress:hover .player-progress-thumb {
-  transform: translate(-50%, -50%) scale(1);
+  transform: translate(-50%, -50%) scale(0);
 }
 
 .player-extras {
+  grid-area: extras;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -911,39 +967,52 @@ code {
   font-size: 0.75rem;
 }
 
-/* 歌词面板 */
+/* 歌词 — 进度条右侧的 3 行浮动歌词，随播放逐行浮现 */
 .player-lyrics {
+  grid-area: lyrics;
   display: none;
-  position: absolute;
-  bottom: 100%;
-  left: 0;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 0;
   width: 100%;
-  max-height: 200px;
-  overflow-y: auto;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-bottom: none;
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  padding: 12px 16px;
-  text-align: center;
-  scroll-behavior: smooth;
+  height: 4.8em;
+  padding-left: 14px;
+  text-align: right;
+  line-height: 1.6;
+  overflow: hidden;
 }
 
-.player-lyrics.open { display: block; }
+.player-lyrics.open { display: flex; }
 
 .lyrics-line {
-  padding: 4px 0;
+  font-size: 0.75rem;
   color: var(--muted);
-  font-size: 0.9rem;
-  transition: color 0.2s, transform 0.2s;
-  opacity: 0.5;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform: translateY(4px);
+  transition: color 0.35s var(--ease), transform 0.35s var(--ease);
 }
 
+/* 上一行 / 下一行：淡化、移开，为当前行让位 */
+.lyrics-line:not(.active) {
+  opacity: 0.42;
+}
+
+/* 当前行：明亮黄铜、浮起居中，像歌词逐行浮现 */
 .lyrics-line.active {
-  color: var(--accent);
-  transform: scale(1.05);
+  color: var(--accent-strong);
   opacity: 1;
-  font-weight: 600;
+  transform: translateY(0);
+}
+
+/* 无歌词时的占位提示 */
+.lyrics-hint {
+  color: var(--faint);
+  opacity: 0.7;
+  transform: none;
 }
 
 .player-explain {
@@ -991,6 +1060,30 @@ code {
   }
 }
 
+@media (max-width: 900px) {
+  #player-bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "info extras"
+      "controls controls"
+      "lyrics lyrics";
+    gap: 6px 10px;
+    padding: 8px 12px;
+  }
+
+  .player-info {
+    max-width: none;
+  }
+
+  .player-lyrics {
+    padding-left: 0;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  body { padding-bottom: 142px; }
+}
+
 @media (max-width: 640px) {
   .nav {
     gap: 18px;
@@ -998,23 +1091,39 @@ code {
     flex-wrap: wrap;
   }
 
+  #player-bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "info extras"
+      "controls controls"
+      "lyrics lyrics";
+    gap: 6px 10px;
+    padding: 8px 12px;
+  }
+
+  .player-info {
+    max-width: none;
+  }
+
+  .player-controls {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .player-lyrics {
+    width: 100%;
+    height: 4.8em;
+    min-width: 0;
+    padding-left: 0;
+    align-items: flex-start;
+    text-align: left;
+  }
+
   .player-explain {
     display: none;
   }
 
-  #player-bar {
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 8px 12px;
-  }
-
-  body { padding-bottom: 112px; }
-
-  .player-info {
-    min-width: auto;
-    max-width: none;
-    flex: 1;
-  }
+  body { padding-bottom: 142px; }
 
   .player-extras .player-volume-wrap {
     display: none;

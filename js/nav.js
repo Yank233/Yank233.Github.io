@@ -21,8 +21,9 @@
       document.title = doc.title;
       window.scrollTo(0, 0);
       history.pushState(null, '', url);
-      if (window.__initAnimations) window.__initAnimations();
+      // 先渲染动态内容，再让动画观察它们，否则元素带 animate-ready 但无人触发入场
       if (window.__renderMurmurs) window.__renderMurmurs();
+      if (window.__initAnimations) window.__initAnimations();
     };
     xhr.send();
   }
@@ -44,8 +45,8 @@
       var newMain = doc.querySelector('main');
       if (newMain) mainEl.replaceWith(newMain);
       document.title = doc.title;
-      if (window.__initAnimations) window.__initAnimations();
       if (window.__renderMurmurs) window.__renderMurmurs();
+      if (window.__initAnimations) window.__initAnimations();
     };
     xhr.send();
   });
