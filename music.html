@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f1518">
+  <title>五音 · 音乐工作室 · Yank's Blog</title>
+  <link rel="stylesheet" href="css/style.css?v=15">
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #eef1ea;
+      --muted: #9ba7a3;
+      --line: #28373a;
+      --paper: #0f1518;
+      --surface: #151e22;
+      --green: #79b9ad;
+      --red: #e98c7f;
+      --control-hover: #1b282d;
+      --instrument-border: #334348;
+      font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+      font-synthesis: none;
+    }
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --ink: #20251f;
+      --muted: #858a80;
+      --line: #e3e5dc;
+      --paper: #f4f3ee;
+      --surface: #fffefa;
+      --green: #40795c;
+      --red: #d76155;
+      --control-hover: #f1f2ec;
+      --instrument-border: #e2e4db;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; min-height: 100vh; background: var(--paper); color: var(--ink); padding-bottom: 120px; }
+    button, select, input { font: inherit; }
+    button { color: inherit; }
+    .app { width: min(1120px, calc(100% - 56px)); margin: 0 auto; padding: 28px 0 48px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 22px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark { display: grid; grid-template-columns: repeat(5, 5px); align-items: end; gap: 3px; height: 25px; padding: 3px; }
+    .brand-mark i { display: block; width: 5px; border-radius: 4px; }
+    .brand-mark i:nth-child(1) { height: 10px; background: #e4c74d; }
+    .brand-mark i:nth-child(2) { height: 16px; background: #e9e9df; border: 1px solid #d8d9ce; }
+    .brand-mark i:nth-child(3) { height: 20px; background: #6d9a76; }
+    .brand-mark i:nth-child(4) { height: 14px; background: #d96659; }
+    .brand-mark i:nth-child(5) { height: 18px; background: #6489b6; }
+    .brand-name { font-weight: 750; font-size: 18px; letter-spacing: 1px; }
+    .brand-caption { margin-top: 2px; color: var(--muted); font-size: 11px; }
+    .blog-nav { display: flex; align-items: center; gap: 17px; margin-left: auto; }
+    .blog-nav a { position: relative; padding: 7px 0; color: var(--muted); font-size: 12px; text-decoration: none; transition: color .2s ease; }
+    .blog-nav a:hover, .blog-nav a[aria-current="page"] { color: var(--ink); }
+    .blog-nav a[aria-current="page"]::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 4px; height: 4px; border-radius: 50%; background: var(--green); transform: translateX(-50%); }
+    .audio-control { display: flex; align-items: center; gap: 10px; color: #747970; font-size: 12px; }
+    .topbar-actions { display: flex; align-items: center; gap: 10px; }
+    .audio-control select { min-width: 126px; padding: 9px 30px 9px 11px; border: 1px solid var(--line); border-radius: 7px; outline: none; color: var(--ink); background: var(--surface); cursor: pointer; }
+    .theme-toggle { display: inline-flex; width: 37px; height: 37px; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); color: var(--ink); cursor: pointer; font-size: 16px; }
+    .theme-toggle:hover { background: var(--control-hover); }
+    @keyframes theme-ripple {
+      from { clip-path: circle(0 at var(--theme-origin-x) var(--theme-origin-y)); }
+      to { clip-path: circle(150vmax at var(--theme-origin-x) var(--theme-origin-y)); }
+    }
+    ::view-transition-old(root) { animation: none; z-index: 1; }
+    ::view-transition-new(root) { animation: theme-ripple 620ms cubic-bezier(.22, .8, .25, 1) both; z-index: 2; }
+    .intro { display: flex; align-items: end; justify-content: space-between; gap: 16px; padding: 31px 0 23px; }
+    .eyebrow { margin: 0 0 7px; color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: 1.6px; }
+    h1 { margin: 0; font-size: clamp(25px, 4vw, 34px); line-height: 1.2; font-weight: 700; }
+    .subtitle { margin: 8px 0 0; color: var(--muted); font-size: 13px; }
+    .octave { display: flex; align-items: center; gap: 8px; padding: 5px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+    .octave button { width: 30px; height: 29px; border: 0; border-radius: 5px; background: transparent; color: #6e746b; cursor: pointer; font-size: 17px; }
+    .octave button:hover { background: var(--control-hover); }
+    .octave span { min-width: 40px; text-align: center; color: #747970; font-size: 11px; }
+    .instrument { padding: 24px 26px 20px; border: 1px solid var(--instrument-border); border-radius: 12px; background: var(--surface); box-shadow: 0 18px 45px #00000022; }
+    .instrument-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+    .instrument-title { font-size: 13px; font-weight: 650; }
+    .instrument-meta { color: var(--muted); font-size: 11px; }
+    .keys { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+    .key { position: relative; display: flex; min-height: 192px; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--key-edge); border-radius: 8px; background: var(--key); cursor: pointer; user-select: none; touch-action: none; transition: transform 100ms ease, filter 100ms ease, box-shadow 100ms ease; }
+    .key:hover { filter: brightness(.98); transform: translateY(-2px); }
+    .key:active, .key.is-playing { transform: translateY(2px); box-shadow: inset 0 4px 10px #00000018; filter: brightness(.92); }
+    .key::after { position: absolute; right: 0; bottom: 0; left: 0; height: 5px; background: var(--key-accent); content: ""; opacity: .8; }
+    .key-yellow { --key: #f3e9ad; --key-edge: #e8d983; --key-accent: #d1ad2d; }
+    .key-white { --key: #f3f2eb; --key-edge: #e4e3d9; --key-accent: #babaae; }
+    .key-green { --key: #d7e8d7; --key-edge: #c1d9c3; --key-accent: #54855e; }
+    .key-red { --key: #f0d6ce; --key-edge: #e6c2b8; --key-accent: #c85749; }
+    .key-blue { --key: #d9e4ef; --key-edge: #c7d6e6; --key-accent: #547ca8; }
+    .key-note { color: #33382f; font-family: Georgia, serif; font-size: 38px; font-weight: 600; line-height: 1; }
+    .key-name { margin-top: 10px; color: #51574e; font-size: 12px; }
+    .key-shortcut { position: absolute; top: 12px; right: 13px; color: #777d72; font-size: 10px; text-transform: uppercase; }
+    .key-octave { position: absolute; bottom: 14px; color: #72786f; font-size: 10px; }
+    .controls { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 19px; }
+    .transport { display: flex; align-items: center; gap: 9px; }
+    .button { display: inline-flex; height: 39px; align-items: center; justify-content: center; gap: 8px; padding: 0 14px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); font-size: 12px; cursor: pointer; transition: background 120ms ease, transform 120ms ease; }
+    .button:hover:not(:disabled) { background: var(--control-hover); }
+    .button:active:not(:disabled) { transform: translateY(1px); }
+    .button:disabled { opacity: .45; cursor: default; }
+    .button-primary { border-color: var(--green); background: var(--green); color: #0f1518; }
+    .button-primary:hover:not(:disabled) { background: #9bd1c4; }
+    .button-primary.is-recording { border-color: var(--red); background: var(--red); }
+    .button-icon { font-size: 15px; line-height: 1; }
+    .status { display: flex; min-height: 18px; align-items: center; gap: 7px; color: var(--muted); font-size: 11px; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #aeb2a8; }
+    .status.recording { color: #c65348; }
+    .status.recording .status-dot { background: #d75e51; animation: pulse 1s infinite; }
+    .status.playing { color: var(--green); }
+    .status.playing .status-dot { background: #548b68; animation: pulse .8s infinite; }
+    @keyframes pulse { 50% { opacity: .35; } }
+    .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 29px 0 12px; }
+    .section-actions { display: flex; align-items: center; gap: 12px; }
+    .section-head h2 { margin: 0; font-size: 14px; font-weight: 700; }
+    .record-count { margin-left: 5px; color: #92968d; font-size: 11px; font-weight: 400; }
+    .clear-button { padding: 5px 2px; border: 0; background: transparent; color: #83887e; font-size: 11px; cursor: pointer; }
+    .clear-button:hover { color: #b3483e; }
+    .recordings { display: grid; gap: 8px; }
+    .empty { padding: 21px 16px; border: 1px dashed #dcded5; border-radius: 8px; color: #8a8f85; font-size: 12px; text-align: center; }
+    .recording-row { display: grid; grid-template-columns: minmax(120px, 1fr) auto auto; align-items: center; gap: 14px; padding: 11px 13px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+    .recording-info { min-width: 0; }
+    .recording-name { overflow: hidden; font-size: 12px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+    .recording-detail { margin-top: 4px; color: var(--muted); font-size: 10px; }
+    .mini-notes { display: flex; align-items: center; gap: 3px; }
+    .mini-note { width: 15px; height: 21px; border: 1px solid #0000000d; border-radius: 3px; }
+    .mini-yellow { background: #ead36c; } .mini-white { background: #e8e8df; } .mini-green { background: #83aa87; } .mini-red { background: #dc8878; } .mini-blue { background: #829fbe; }
+    .row-actions { display: flex; gap: 5px; }
+    .row-actions .button { width: 33px; height: 32px; padding: 0; font-size: 14px; }
+    .row-actions .delete-button:hover { color: #b3483e; background: #fbefed; }
+    .footer { margin-top: 23px; padding-top: 13px; border-top: 1px solid var(--line); color: #999d94; font-size: 10px; }
+    @media (max-width: 600px) {
+      .app { width: calc(100% - 32px); padding-top: 18px; }
+      .topbar { padding-bottom: 16px; }
+      .blog-nav { order: 3; width: 100%; justify-content: space-between; gap: 8px; }
+      .topbar { flex-wrap: wrap; }
+      .audio-control > span { display: none; }
+      .topbar-actions { gap: 7px; }
+      .audio-control select { min-width: 112px; }
+      .intro { padding: 24px 0 17px; }
+      .subtitle { max-width: 230px; line-height: 1.55; }
+      .instrument { padding: 17px 12px 15px; }
+      .keys { gap: 5px; }
+      .key { min-height: 158px; }
+      .key-note { font-size: 31px; }
+      .key-shortcut { top: 9px; right: 9px; }
+      .controls { align-items: flex-start; flex-direction: column; gap: 12px; }
+      .transport { width: 100%; }
+      .button { padding: 0 10px; }
+      .recording-row { grid-template-columns: minmax(80px, 1fr) auto auto; gap: 8px; padding: 10px; }
+      .mini-note { width: 11px; height: 17px; }
+    }
+    @media (max-width: 380px) {
+      .key { min-height: 136px; }
+      .key-note { font-size: 27px; }
+      .key-name { font-size: 10px; }
+      .transport { gap: 5px; }
+      .button { gap: 5px; padding: 0 8px; font-size: 11px; }
+      .mini-notes { gap: 2px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+        <div><div class="brand-name">五音</div><div class="brand-caption">GONG · SHANG · JUE · ZHI · YU</div></div>
+      </div>
+      <nav class="blog-nav" aria-label="博客导航">
+        <a href="index.html">首页</a>
+        <a href="posts.html">文章</a>
+        <a href="about.html">关于</a>
+        <a href="project.html">项目</a>
+        <a href="links.html">友链</a>
+        <a href="music.html" aria-current="page">音乐</a>
+      </nav>
+      <div class="topbar-actions">
+        <label class="audio-control"><span>音色</span>
+          <select id="instrumentSelect" aria-label="选择音色">
+            <option value="piano">木琴</option><option value="flute">竹笛</option><option value="synth">合成器</option><option value="strings">弦乐</option>
+          </select>
+        </label>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换夜间模式" title="切换夜间模式">☾</button>
+      </div>
+    </header>
+
+    <section class="intro">
+      <div><p class="eyebrow">FIVE TONES · FIVE COLORS</p><h1>让灵感，自由发声。</h1><p class="subtitle">宫、商、角、徵、羽，触碰琴键，开始你的创作。</p></div>
+      <div class="octave" aria-label="八度选择"><button id="octaveDown" type="button" aria-label="降低八度">−</button><span id="octaveLabel">第 4 组</span><button id="octaveUp" type="button" aria-label="升高八度">＋</button></div>
+    </section>
+
+    <section class="instrument" aria-label="五声音阶琴键">
+      <div class="instrument-head"><span class="instrument-title">五声音阶</span><span class="instrument-meta">键盘 A · S · D · F · G</span></div>
+      <div class="keys" id="keys">
+        <button class="key key-yellow" data-note="0" type="button" aria-label="Do 宫"><span class="key-shortcut">A</span><span class="key-note">Do</span><span class="key-name">宫 · 黄</span><span class="key-octave">C<span class="octave-number">4</span></span></button>
+        <button class="key key-white" data-note="1" type="button" aria-label="Re 商"><span class="key-shortcut">S</span><span class="key-note">Re</span><span class="key-name">商 · 白</span><span class="key-octave">D<span class="octave-number">4</span></span></button>
+        <button class="key key-green" data-note="2" type="button" aria-label="Mi 角"><span class="key-shortcut">D</span><span class="key-note">Mi</span><span class="key-name">角 · 绿</span><span class="key-octave">E<span class="octave-number">4</span></span></button>
+        <button class="key key-red" data-note="3" type="button" aria-label="Sol 徵"><span class="key-shortcut">F</span><span class="key-note">Sol</span><span class="key-name">徵 · 红</span><span class="key-octave">G<span class="octave-number">4</span></span></button>
+        <button class="key key-blue" data-note="4" type="button" aria-label="La 羽"><span class="key-shortcut">G</span><span class="key-note">La</span><span class="key-name">羽 · 蓝</span><span class="key-octave">A<span class="octave-number">4</span></span></button>
+      </div>
+      <div class="controls">
+        <div class="transport">
+          <button class="button button-primary" id="recordButton" type="button"><span class="button-icon">●</span><span>开始录制</span></button>
+          <button class="button" id="playLatestButton" type="button" disabled><span class="button-icon">▶</span><span>重播</span></button>
+          <button class="button" id="stopButton" type="button" disabled><span class="button-icon">■</span><span>停止</span></button>
+        </div>
+        <div class="status" id="status" role="status" aria-live="polite"><span class="status-dot"></span><span>准备就绪 · 触碰琴键开始演奏</span></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="recordingsTitle">
+      <div class="section-head"><h2 id="recordingsTitle">我的旋律<span class="record-count" id="recordCount">0</span></h2><div class="section-actions"><button class="clear-button" id="importButton" type="button">导入</button><button class="clear-button" id="exportButton" type="button" disabled>导出</button><button class="clear-button" id="clearButton" type="button" hidden>清空记录</button></div></div>
+      <div class="recordings" id="recordings"></div>
+    </section>
+    <input id="fileInput" type="file" accept=".wuyin,application/x-wuyin+json,application/json" hidden>
+    <footer class="footer">录制保存在当前浏览器中 · 可用 .wuyin 文件导入导出 · 用 A S D F G 键演奏</footer>
+  </main>
+
+  <script>
+    (() => {
+      const notes = [
+        { name: 'Do', color: 'yellow', frequency: 261.63 },
+        { name: 'Re', color: 'white', frequency: 293.66 },
+        { name: 'Mi', color: 'green', frequency: 329.63 },
+        { name: 'Sol', color: 'red', frequency: 392.00 },
+        { name: 'La', color: 'blue', frequency: 440.00 }
+      ];
+      const root = document.documentElement;
+      const themeMeta = document.querySelector('meta[name="theme-color"]');
+      const keys = [...document.querySelectorAll('.key')];
+      const audioSelect = document.querySelector('#instrumentSelect');
+      const themeToggle = document.querySelector('#themeToggle');
+      const recordButton = document.querySelector('#recordButton');
+      const playLatestButton = document.querySelector('#playLatestButton');
+      const stopButton = document.querySelector('#stopButton');
+      const importButton = document.querySelector('#importButton');
+      const exportButton = document.querySelector('#exportButton');
+      const fileInput = document.querySelector('#fileInput');
+      const statusEl = document.querySelector('#status');
+      const recordingsEl = document.querySelector('#recordings');
+      const storageKey = 'wuyin-recordings-v1';
+      const themeStorageKey = 'wuyin-theme-v1';
+      let audioContext;
+      let octave = 4;
+      let recording = null;
+      let isPlaying = false;
+      let playbackTimers = [];
+      let activeVoices = new Map();
+      let recordings = loadRecordings();
+
+      function loadRecordings() {
+        try {
+          const data = JSON.parse(localStorage.getItem(storageKey) || '[]');
+          return Array.isArray(data) ? data.map(normalizeRecording).filter(Boolean) : [];
+        } catch { return []; }
+      }
+      function normalizeRecording(item, fallbackId = createId()) {
+        if (!item || !Array.isArray(item.events)) return null;
+        const events = item.events.slice(0, 500).map(event => {
+          const note = Number(event?.note);
+          const at = Number(event?.at);
+          const duration = Number(event?.duration);
+          if (!Number.isInteger(note) || note < 0 || note >= notes.length || !Number.isFinite(at) || !Number.isFinite(duration)) return null;
+          return { note, at: Math.max(0, Math.round(at)), duration: Math.max(90, Math.min(10000, Math.round(duration))) };
+        }).filter(Boolean);
+        if (!events.length) return null;
+        const date = new Date(item.date);
+        return {
+          id: String(item.id || fallbackId).slice(0, 100),
+          name: String(item.name || '未命名旋律').slice(0, 60),
+          date: Number.isNaN(date.getTime()) ? new Date().toISOString() : date.toISOString(),
+          duration: Math.max(...events.map(event => event.at + event.duration)),
+          events
+        };
+      }
+      function createId() { return `${Date.now()}-${Math.random().toString(16).slice(2, 10)}`; }
+      function saveRecordings() {
+        try { localStorage.setItem(storageKey, JSON.stringify(recordings)); }
+        catch { setStatus('本地存储空间不足，无法保存更多旋律'); }
+      }
+      function setStatus(message, state = '') {
+        statusEl.className = `status ${state}`;
+        statusEl.lastElementChild.textContent = message;
+      }
+      function getContext() {
+        if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioContext.state === 'suspended') audioContext.resume();
+        return audioContext;
+      }
+      function applyTheme(theme) {
+        const isDark = theme === 'dark';
+        root.dataset.theme = isDark ? 'dark' : 'light';
+        themeMeta.content = isDark ? '#0f1518' : '#f4f3ee';
+        themeToggle.textContent = isDark ? '☀' : '☾';
+        themeToggle.setAttribute('aria-label', isDark ? '切换日间模式' : '切换夜间模式');
+        themeToggle.title = isDark ? '切换日间模式' : '切换夜间模式';
+      }
+      let savedTheme = 'dark';
+      try { savedTheme = localStorage.getItem(themeStorageKey) === 'light' ? 'light' : 'dark'; } catch {}
+      applyTheme(savedTheme);
+      themeToggle.addEventListener('click', () => {
+        const theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        const bounds = themeToggle.getBoundingClientRect();
+        root.style.setProperty('--theme-origin-x', `${bounds.left + bounds.width / 2}px`);
+        root.style.setProperty('--theme-origin-y', `${bounds.top + bounds.height / 2}px`);
+        const updateTheme = () => {
+          applyTheme(theme);
+          try { localStorage.setItem(themeStorageKey, theme); } catch {}
+        };
+        if (typeof document.startViewTransition === 'function') document.startViewTransition(updateTheme);
+        else updateTheme();
+      });
+      function frequencyFor(index) { return notes[index].frequency * Math.pow(2, octave - 4); }
+      function makeVoice(index) {
+        const ctx = getContext();
+        const now = ctx.currentTime;
+        const destination = ctx.createGain();
+        const master = audioSelect.value === 'flute' ? 0.16 : 0.22;
+        destination.gain.setValueAtTime(0.0001, now);
+        destination.gain.linearRampToValueAtTime(master, now + (audioSelect.value === 'strings' ? 0.16 : 0.015));
+        destination.connect(ctx.destination);
+        const type = audioSelect.value;
+        const oscillators = [];
+        const configs = type === 'piano' ? [['triangle', 1], ['sine', 2, 0.13]]
+          : type === 'flute' ? [['sine', 1], ['sine', 2, 0.18]]
+          : type === 'strings' ? [['sawtooth', 1], ['triangle', 1.005, 0.35]]
+          : [['square', 1], ['triangle', 2, 0.12]];
+        for (const [wave, ratio, volume = 1] of configs) {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = wave;
+          osc.frequency.value = frequencyFor(index) * ratio;
+          gain.gain.value = volume;
+          osc.connect(gain).connect(destination);
+          osc.start(now);
+          oscillators.push(osc);
+        }
+        if (type === 'piano') destination.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
+        return { destination, oscillators, released: false };
+      }
+      function releaseVoice(voice, duration = 0.18) {
+        if (!voice || voice.released) return;
+        voice.released = true;
+        const ctx = getContext();
+        const now = ctx.currentTime;
+        voice.destination.gain.cancelScheduledValues(now);
+        voice.destination.gain.setTargetAtTime(0.0001, now, duration / 4);
+        voice.oscillators.forEach(osc => { try { osc.stop(now + duration); } catch {} });
+      }
+      function startNote(index, source) {
+        if (activeVoices.has(source)) return;
+        const voice = makeVoice(index);
+        activeVoices.set(source, { voice, index, startedAt: performance.now() });
+        keys[index].classList.add('is-playing');
+        return voice;
+      }
+      function endNote(source, forcedDuration) {
+        const active = activeVoices.get(source);
+        if (!active) return;
+        activeVoices.delete(source);
+        releaseVoice(active.voice, audioSelect.value === 'strings' ? 0.35 : 0.16);
+        if (![...activeVoices.values()].some(item => item.index === active.index)) keys[active.index].classList.remove('is-playing');
+        if (recording && source !== 'playback' && !source.startsWith('playback-')) {
+          active.event.duration = Math.max(90, Math.round(forcedDuration ?? (performance.now() - active.startedAt)));
+        }
+      }
+      function press(index, source) {
+        if (isPlaying && source !== 'playback') stopPlayback();
+        const active = startNote(index, source);
+        if (!active || !recording || source === 'playback') return;
+        const event = { note: index, at: Math.max(0, Math.round(performance.now() - recording.startedAt)), duration: 300 };
+        recording.events.push(event);
+        activeVoices.get(source).event = event;
+      }
+      function tap(index) {
+        const source = `tap-${Math.random()}`;
+        press(index, source);
+        window.setTimeout(() => endNote(source, 320), 340);
+      }
+      keys.forEach((key, index) => {
+        key.addEventListener('pointerdown', event => { event.preventDefault(); key.setPointerCapture?.(event.pointerId); press(index, `pointer-${event.pointerId}`); });
+        key.addEventListener('pointerup', event => endNote(`pointer-${event.pointerId}`));
+        key.addEventListener('pointercancel', event => endNote(`pointer-${event.pointerId}`));
+        key.addEventListener('lostpointercapture', event => endNote(`pointer-${event.pointerId}`));
+        key.addEventListener('click', event => { if (event.detail === 0) tap(index); });
+      });
+      const keyboardMap = { a: 0, s: 1, d: 2, f: 3, g: 4 };
+      window.addEventListener('keydown', event => {
+        if (event.repeat || event.target?.matches?.('input, textarea') || event.target?.isContentEditable) return;
+        const index = keyboardMap[event.key.toLowerCase()];
+        if (index !== undefined) { event.preventDefault(); press(index, `keyboard-${event.key.toLowerCase()}`); }
+        if (event.key === 'Escape') stopPlayback();
+      });
+      window.addEventListener('keyup', event => {
+        const key = event.key.toLowerCase();
+        if (keyboardMap[key] !== undefined) endNote(`keyboard-${key}`);
+      });
+      window.addEventListener('blur', () => [...activeVoices.keys()].forEach(endNote));
+
+      audioSelect.addEventListener('change', () => {
+        if (isPlaying) stopPlayback();
+        [...activeVoices.keys()].forEach(source => endNote(source));
+        audioSelect.blur();
+        setStatus(`音色已切换为${audioSelect.options[audioSelect.selectedIndex].text}${recording ? ' · 正在录制' : ''}`, recording ? 'recording' : '');
+      });
+
+      document.querySelector('#octaveDown').addEventListener('click', () => changeOctave(-1));
+      document.querySelector('#octaveUp').addEventListener('click', () => changeOctave(1));
+      function changeOctave(amount) {
+        octave = Math.max(2, Math.min(6, octave + amount));
+        document.querySelector('#octaveLabel').textContent = `第 ${octave} 组`;
+        document.querySelectorAll('.octave-number').forEach(node => node.textContent = octave);
+      }
+      recordButton.addEventListener('click', () => recording ? finishRecording() : beginRecording());
+      function beginRecording() {
+        if (isPlaying) stopPlayback();
+        getContext();
+        recording = { startedAt: performance.now(), events: [] };
+        recordButton.classList.add('is-recording');
+        recordButton.innerHTML = '<span class="button-icon">■</span><span>结束录制</span>';
+        setStatus('正在录制 · 演奏结束后点击停止', 'recording');
+      }
+      function finishRecording() {
+        [...activeVoices.keys()].forEach(source => endNote(source));
+        const take = recording;
+        recording = null;
+        recordButton.classList.remove('is-recording');
+        recordButton.innerHTML = '<span class="button-icon">●</span><span>开始录制</span>';
+        if (!take.events.length) { setStatus('这次没有录到音符，再试一次'); return; }
+        take.events.sort((a, b) => a.at - b.at);
+        const now = new Date();
+        const duration = Math.max(...take.events.map(event => event.at + event.duration));
+        recordings.unshift({ id: createId(), name: `旋律 ${now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}`, date: now.toISOString(), duration, events: take.events });
+        saveRecordings(); renderRecordings();
+        setStatus(`已保存 ${take.events.length} 个音符`);
+      }
+      playLatestButton.addEventListener('click', () => { if (recordings[0]) playRecording(recordings[0]); });
+      stopButton.addEventListener('click', stopPlayback);
+      exportButton.addEventListener('click', exportRecordings);
+      importButton.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', importRecordings);
+      function exportRecordings() {
+        if (!recordings.length) return;
+        const payload = { format: 'wuyin-melody', version: 1, app: '五音', exportedAt: new Date().toISOString(), recordings };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/x-wuyin+json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `五音旋律-${new Date().toISOString().slice(0, 10)}.wuyin`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+        setStatus(`已导出 ${recordings.length} 段旋律`);
+      }
+      async function importRecordings(event) {
+        const file = event.target.files?.[0];
+        fileInput.value = '';
+        if (!file) return;
+        try {
+          const payload = JSON.parse(await file.text());
+          if (payload?.format !== 'wuyin-melody' || payload.version !== 1 || !Array.isArray(payload.recordings)) throw new Error('format');
+          const existingIds = new Set(recordings.map(item => item.id));
+          const imported = payload.recordings.map(item => normalizeRecording(item, createId())).filter(Boolean).map(item => {
+            while (existingIds.has(item.id)) item.id = createId();
+            existingIds.add(item.id);
+            return item;
+          });
+          if (!imported.length) throw new Error('empty');
+          recordings = [...imported, ...recordings];
+          saveRecordings();
+          renderRecordings();
+          setStatus(`已导入 ${imported.length} 段旋律`);
+        } catch {
+          setStatus('无法识别此文件，请选择五音导出的 .wuyin 文件');
+        }
+      }
+      function playRecording(item) {
+        stopPlayback();
+        getContext();
+        isPlaying = true;
+        stopButton.disabled = false;
+        playLatestButton.disabled = true;
+        setStatus(`正在重播 · ${item.name}`, 'playing');
+        const start = performance.now() + 100;
+        let lastEnd = 0;
+        item.events.forEach((event, i) => {
+          const source = `playback-${i}`;
+          playbackTimers.push(window.setTimeout(() => {
+            const voice = makeVoice(event.note);
+            const held = { voice, index: event.note };
+            activeVoices.set(source, held);
+            keys[event.note].classList.add('is-playing');
+            window.setTimeout(() => endNote(source), Math.max(90, event.duration));
+          }, Math.max(0, start + event.at - performance.now())));
+          lastEnd = Math.max(lastEnd, event.at + event.duration);
+        });
+        playbackTimers.push(window.setTimeout(() => {
+          isPlaying = false; playLatestButton.disabled = recordings.length === 0; stopButton.disabled = true; setStatus('重播完成 · 继续创作吧');
+        }, Math.max(180, start + lastEnd - performance.now() + 180)));
+      }
+      function stopPlayback() {
+        if (!isPlaying) return;
+        playbackTimers.forEach(window.clearTimeout); playbackTimers = [];
+        [...activeVoices.keys()].filter(source => source.startsWith('playback-')).forEach(endNote);
+        isPlaying = false;
+        playLatestButton.disabled = recordings.length === 0;
+        stopButton.disabled = true;
+        setStatus('已停止重播');
+      }
+      function renderRecordings() {
+        document.querySelector('#recordCount').textContent = recordings.length;
+        document.querySelector('#clearButton').hidden = recordings.length === 0;
+        exportButton.disabled = recordings.length === 0;
+        playLatestButton.disabled = recordings.length === 0;
+        if (!recordings.length) {
+          recordingsEl.innerHTML = '<div class="empty">你的第一段旋律，等你来谱写。</div>';
+          return;
+        }
+        recordingsEl.innerHTML = recordings.map(item => {
+          const date = new Date(item.date);
+          const duration = (item.duration / 1000).toFixed(1);
+          const dots = item.events.slice(0, 18).map(event => `<span class="mini-note mini-${notes[event.note]?.color || 'white'}"></span>`).join('') + (item.events.length > 18 ? '<span class="recording-detail">…</span>' : '');
+          return `<article class="recording-row" data-id="${item.id}"><div class="recording-info"><div class="recording-name">${escapeHtml(item.name)}</div><div class="recording-detail">${date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' })} · ${item.events.length} 音符 · ${duration} 秒</div></div><div class="mini-notes" aria-hidden="true">${dots}</div><div class="row-actions"><button class="button play-item" type="button" aria-label="重播 ${escapeHtml(item.name)}" title="重播">▶</button><button class="button delete-button" type="button" aria-label="删除 ${escapeHtml(item.name)}" title="删除">×</button></div></article>`;
+        }).join('');
+        recordingsEl.querySelectorAll('.play-item').forEach(button => button.addEventListener('click', () => { const item = recordings.find(entry => entry.id === button.closest('.recording-row').dataset.id); if (item) playRecording(item); }));
+        recordingsEl.querySelectorAll('.delete-button').forEach(button => button.addEventListener('click', () => {
+          const id = button.closest('.recording-row').dataset.id;
+          recordings = recordings.filter(item => item.id !== id); saveRecordings(); renderRecordings(); setStatus('已删除这段旋律');
+        }));
+      }
+      function escapeHtml(value) { return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]); }
+      document.querySelector('#clearButton').addEventListener('click', () => { recordings = []; saveRecordings(); renderRecordings(); setStatus('已清空所有旋律'); });
+      renderRecordings();
+    })();
+  </script>
+  <script src="js/player.js?v=22"></script>
+</body>
+</html>

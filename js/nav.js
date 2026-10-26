@@ -20,10 +20,19 @@
       }
       document.title = doc.title;
       window.scrollTo(0, 0);
-      history.pushState(null, '', url);
+      try {
+        history.pushState(null, '', url);
+      } catch (_) {
+        window.location.href = url;
+        return;
+      }
+      markCurrentPage();
       // 先渲染动态内容，再让动画观察它们，否则元素带 animate-ready 但无人触发入场
       if (window.__renderMurmurs) window.__renderMurmurs();
       if (window.__initAnimations) window.__initAnimations();
+    };
+    xhr.onerror = function () {
+      window.location.href = url;
     };
     xhr.send();
   }
@@ -31,7 +40,8 @@
   // 事件委托：拦截内部链接点击
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a');
-    if (!a || a.host !== window.location.host || a.hasAttribute('target')) return;
+    // file:// 页面无法安全使用 pushState，交给浏览器做普通页面跳转。
+    if (window.location.protocol === 'file:' || !a || a.host !== window.location.host || a.hasAttribute('target') || a.hasAttribute('data-no-spa')) return;
     e.preventDefault();
     navigate(a.href);
   });
@@ -45,6 +55,7 @@
       var newMain = doc.querySelector('main');
       if (newMain) mainEl.replaceWith(newMain);
       document.title = doc.title;
+      markCurrentPage();
       if (window.__renderMurmurs) window.__renderMurmurs();
       if (window.__initAnimations) window.__initAnimations();
     };
@@ -53,5 +64,16 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     mainEl = document.querySelector('main');
+    markCurrentPage();
   });
+
+  function markCurrentPage() {
+    var current = window.location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('.nav a').forEach(function (link) {
+      var href = link.getAttribute('href') || '';
+      var page = href.split('/').pop() || 'index.html';
+      if (page === current) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
+  }
 })();

@@ -1,12 +1,23 @@
 (function () {
   'use strict';
 
+  if (window.__blogPlayerInitialized) return;
+  window.__blogPlayerInitialized = true;
+
   let currentIndex = 0;
   let playlist = [];
   let audio = null;
   let ui = {};
   let currentLyrics = [];
   let lastLyricIndex = -1;
+  const localPlaylist = [
+    { title: 'Billie Jean?', artist: '21 Clown', file: 'Billie Jean.mp3' },
+    { title: 'On My Own', artist: 'Bltz Kids', file: 'On My Own.mp3' },
+    { title: 'Stay With Me', artist: '真夜中のドア', file: 'Stay With Me.mp3' },
+    { title: '夜に駆ける', artist: 'YOASOBI', file: '夜に駆ける.mp3' },
+    { title: 'Speed of Light', artist: '塞壬唱片', file: 'Speed of Light.mp3' },
+    { title: '星に駆られて', artist: '牧野忠羲', file: '星に駆られて.mp3' }
+  ];
 
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
@@ -15,26 +26,48 @@
   }
 
   function loadPlaylist() {
+    // 直接打开本地 HTML 时，浏览器会阻止读取 JSON；使用与 playlist.json 同步的兜底数据。
+    if (window.location.protocol === 'file:') {
+      playlist = localPlaylist.map(function (song) { return Object.assign({}, song); });
+      enablePlaylist();
+      return;
+    }
     const base = getBase();
     const xhr = new XMLHttpRequest();
     xhr.open('GET', base + 'music/playlist.json?v=2', true);
     xhr.onload = function () {
       try {
-        playlist = JSON.parse(xhr.responseText);
+        const data = JSON.parse(xhr.responseText);
+        playlist = Array.isArray(data) ? data.filter(function (song) {
+          return song && song.file && song.title;
+        }) : [];
         if (playlist.length > 0) {
-          renderPlaylist();
+          enablePlaylist();
+        } else {
+          ui.explain.textContent = '歌单为空';
         }
-      } catch (_) { /* fall through */ }
+      } catch (_) {
+        ui.explain.textContent = '歌单加载失败';
+        ui.explain.classList.add('player-error');
+      }
     };
     xhr.onerror = function () {
       ui.explain.textContent = '歌单加载失败';
+      ui.explain.classList.add('player-error');
     };
     xhr.send();
   }
 
   function getBase() {
-    const depth = window.location.pathname.split('/').filter(Boolean).length;
-    return depth > 1 ? '../' : '';
+    return /[\\/]posts[\\/]/i.test(window.location.pathname) ? '../' : '';
+  }
+
+  function enablePlaylist() {
+    [ui.playBtn, ui.prevBtn, ui.nextBtn, ui.listToggle].forEach(function (button) {
+      button.disabled = false;
+    });
+    renderPlaylist();
+    ui.explain.textContent = '选择一首歌开始';
   }
 
   function buildUI() {
@@ -52,13 +85,13 @@
       </div>
       <div class="player-controls">
         <div class="player-transport">
-          <button class="player-btn" id="playerPrev" title="上一首">⏮</button>
-          <button class="player-btn player-play-btn" id="playerPlay" title="播放">▶</button>
-          <button class="player-btn" id="playerNext" title="下一首">⏭</button>
+          <button class="player-btn" id="playerPrev" title="上一首" disabled>⏮</button>
+          <button class="player-btn player-play-btn" id="playerPlay" title="播放" disabled>▶</button>
+          <button class="player-btn" id="playerNext" title="下一首" disabled>⏭</button>
         </div>
         <div class="player-progress-wrap">
           <span class="player-time" id="playerCurrent">0:00</span>
-          <div class="player-progress" id="playerProgress" role="progressbar" aria-label="播放进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="player-progress" id="playerProgress" role="slider" tabindex="0" aria-label="播放进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-disabled="true">
             <div class="player-progress-fill" id="playerProgressFill"></div>
             <div class="player-progress-thumb" id="playerProgressThumb"></div>
           </div>
@@ -71,7 +104,7 @@
         <div class="player-volume-wrap">
           <input type="range" class="player-volume" id="playerVolume" min="0" max="1" step="0.05" value="0.7">
         </div>
-        <button class="player-btn" id="playerListToggle" title="歌单">📋</button>
+        <button class="player-btn" id="playerListToggle" title="歌单" disabled>📋</button>
       </div>
       <div class="player-list" id="playerList"></div>
       <div class="player-explain" id="playerExplain"></div>
@@ -171,8 +204,8 @@
   function renderPlaylist() {
     ui.list.innerHTML = playlist.map((song, i) =>
       `<div class="player-list-item${i === currentIndex ? ' active' : ''}" data-index="${i}">
-        <span class="player-list-title">${song.title}</span>
-        <span class="player-list-artist">${song.artist}</span>
+        <span class="player-list-title">${escapeHtml(song.title)}</span>
+        <span class="player-list-artist">${escapeHtml(song.artist || '')}</span>
       </div>`
     ).join('');
     ui.list.querySelectorAll('.player-list-item').forEach(el => {
@@ -209,21 +242,26 @@
     el.addEventListener('durationchange', onMetadata);
     el.addEventListener('timeupdate', onTimeUpdate);
     el.addEventListener('ended', onEnded);
+    el.addEventListener('play', function () {
+      if (audio === el) setPlaybackState(true);
+    });
+    el.addEventListener('pause', function () {
+      if (audio === el && !el.ended) setPlaybackState(false);
+    });
     el.addEventListener('error', function () {
       if (audio !== el) return; // 旧实例的错误，忽略
       ui.title.textContent = '歌曲加载失败';
-      ui.playBtn.textContent = '▶';
-      document.body.classList.remove('playing');
+      setPlaybackState(false);
+      ui.explain.textContent = '请检查 music 文件或网络路径';
+      ui.explain.classList.add('player-error');
     });
     el.play().then(() => {
       if (audio !== el) return; // 已切歌，忽略
-      ui.playBtn.textContent = '⏸';
-      document.body.classList.add('playing');
+      setPlaybackState(true);
     }).catch(function () {
       if (audio !== el) return; // 旧实例的 reject，忽略
-      ui.title.textContent = '歌曲加载失败';
-      ui.playBtn.textContent = '▶';
-      document.body.classList.remove('playing');
+      ui.title.textContent = '点击播放按钮开始';
+      setPlaybackState(false);
     });
     ui.title.textContent = song.title;
     ui.artist.textContent = song.artist;
@@ -276,22 +314,32 @@
       return;
     }
     if (audio.paused) {
-      audio.play();
-      ui.playBtn.textContent = '⏸';
-      document.body.classList.add('playing');
+      audio.play().then(function () {
+        if (audio) setPlaybackState(true);
+      }).catch(function () {
+        ui.explain.textContent = '浏览器阻止了播放，请再次点击';
+      });
     } else {
       audio.pause();
-      ui.playBtn.textContent = '▶';
-      document.body.classList.remove('playing');
+      setPlaybackState(false);
     }
   }
 
+  function setPlaybackState(isPlaying) {
+    ui.playBtn.textContent = isPlaying ? '⏸' : '▶';
+    ui.playBtn.title = isPlaying ? '暂停' : '播放';
+    document.body.classList.toggle('playing', isPlaying);
+    ui.explain.classList.toggle('player-error', false);
+  }
+
   function prevTrack() {
+    if (!playlist.length) return;
     currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
     loadAndPlay();
   }
 
   function nextTrack() {
+    if (!playlist.length) return;
     currentIndex = (currentIndex + 1) % playlist.length;
     loadAndPlay();
   }
@@ -304,7 +352,42 @@
   }
 
   function initProgressDisplay() {
-    ui.progress.setAttribute('aria-disabled', 'true');
+    ui.progress.setAttribute('aria-disabled', 'false');
+    function seekFromEvent(event) {
+      if (!audio || !Number.isFinite(audio.duration) || audio.duration <= 0) return;
+      const rect = ui.progress.getBoundingClientRect();
+      const pct = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+      audio.currentTime = pct * audio.duration;
+      updateProgressValue(pct);
+    }
+    ui.progress.addEventListener('pointerdown', function (event) {
+      if (!audio) return;
+      event.preventDefault();
+      document.body.classList.add('seeking');
+      ui.progress.setPointerCapture?.(event.pointerId);
+      seekFromEvent(event);
+    });
+    ui.progress.addEventListener('pointermove', function (event) {
+      if (document.body.classList.contains('seeking')) seekFromEvent(event);
+    });
+    ui.progress.addEventListener('pointerup', function (event) {
+      document.body.classList.remove('seeking');
+      ui.progress.releasePointerCapture?.(event.pointerId);
+    });
+    ui.progress.addEventListener('pointercancel', function () {
+      document.body.classList.remove('seeking');
+    });
+    ui.progress.addEventListener('keydown', function (event) {
+      if (!audio || !Number.isFinite(audio.duration)) return;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        audio.currentTime = Math.min(audio.duration, Math.max(0, audio.currentTime + (event.key === 'ArrowRight' ? 5 : -5)));
+      } else if (event.key === 'Home') {
+        event.preventDefault(); audio.currentTime = 0;
+      } else if (event.key === 'End') {
+        event.preventDefault(); audio.currentTime = audio.duration;
+      }
+    });
   }
 
   function init() {
@@ -323,6 +406,12 @@
     });
     ui.listToggle.addEventListener('click', function () {
       ui.list.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!ui.list.contains(event.target) && event.target !== ui.listToggle) {
+        ui.list.classList.remove('open');
+      }
     });
 
     loadPlaylist();
