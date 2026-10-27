@@ -4,8 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0f1518">
+  <script src="js/theme.js?v=1"></script>
   <title>五音 · 音乐工作室 · Yank's Blog</title>
-  <link rel="stylesheet" href="css/style.css?v=15">
+  <link rel="stylesheet" href="css/style.css?v=16">
   <style>
     :root {
       color-scheme: dark;
@@ -56,14 +57,8 @@
     .audio-control { display: flex; align-items: center; gap: 10px; color: #747970; font-size: 12px; }
     .topbar-actions { display: flex; align-items: center; gap: 10px; }
     .audio-control select { min-width: 126px; padding: 9px 30px 9px 11px; border: 1px solid var(--line); border-radius: 7px; outline: none; color: var(--ink); background: var(--surface); cursor: pointer; }
-    .theme-toggle { display: inline-flex; width: 37px; height: 37px; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); color: var(--ink); cursor: pointer; font-size: 16px; }
-    .theme-toggle:hover { background: var(--control-hover); }
-    @keyframes theme-ripple {
-      from { clip-path: circle(0 at var(--theme-origin-x) var(--theme-origin-y)); }
-      to { clip-path: circle(150vmax at var(--theme-origin-x) var(--theme-origin-y)); }
-    }
-    ::view-transition-old(root) { animation: none; z-index: 1; }
-    ::view-transition-new(root) { animation: theme-ripple 620ms cubic-bezier(.22, .8, .25, 1) both; z-index: 2; }
+    .theme-toggle { display: inline-flex; width: 37px; height: 37px; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--ink); cursor: pointer; font-size: 16px; transition: color .2s ease, border-color .2s ease, background .2s ease, transform .2s ease; }
+    .theme-toggle:hover { color: var(--green); border-color: var(--green); background: var(--control-hover); transform: rotate(12deg); }
     .intro { display: flex; align-items: end; justify-content: space-between; gap: 16px; padding: 31px 0 23px; }
     .eyebrow { margin: 0 0 7px; color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: 1.6px; }
     h1 { margin: 0; font-size: clamp(25px, 4vw, 34px); line-height: 1.2; font-weight: 700; }
@@ -157,7 +152,7 @@
     }
   </style>
 </head>
-<body>
+<body class="music-page">
   <main class="app">
     <header class="topbar">
       <div class="brand">
@@ -178,7 +173,7 @@
             <option value="piano">木琴</option><option value="flute">竹笛</option><option value="synth">合成器</option><option value="strings">弦乐</option>
           </select>
         </label>
-        <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换夜间模式" title="切换夜间模式">☾</button>
+        <button class="theme-toggle" data-theme-toggle type="button" aria-label="切换日间模式" title="切换日间模式">☀</button>
       </div>
     </header>
 
@@ -206,6 +201,14 @@
       </div>
     </section>
 
+    <section class="music-playlist" aria-labelledby="playlistTitle">
+      <div class="music-playlist-head">
+        <h2 class="music-playlist-title" id="playlistTitle">背景歌单</h2>
+        <p class="music-playlist-hint">点击歌曲即可切换，播放器会保持在页面底部</p>
+      </div>
+      <div class="music-playlist-list" id="musicPlaylist" aria-live="polite"></div>
+    </section>
+
     <section aria-labelledby="recordingsTitle">
       <div class="section-head"><h2 id="recordingsTitle">我的旋律<span class="record-count" id="recordCount">0</span></h2><div class="section-actions"><button class="clear-button" id="importButton" type="button">导入</button><button class="clear-button" id="exportButton" type="button" disabled>导出</button><button class="clear-button" id="clearButton" type="button" hidden>清空记录</button></div></div>
       <div class="recordings" id="recordings"></div>
@@ -223,11 +226,8 @@
         { name: 'Sol', color: 'red', frequency: 392.00 },
         { name: 'La', color: 'blue', frequency: 440.00 }
       ];
-      const root = document.documentElement;
-      const themeMeta = document.querySelector('meta[name="theme-color"]');
       const keys = [...document.querySelectorAll('.key')];
       const audioSelect = document.querySelector('#instrumentSelect');
-      const themeToggle = document.querySelector('#themeToggle');
       const recordButton = document.querySelector('#recordButton');
       const playLatestButton = document.querySelector('#playLatestButton');
       const stopButton = document.querySelector('#stopButton');
@@ -237,7 +237,6 @@
       const statusEl = document.querySelector('#status');
       const recordingsEl = document.querySelector('#recordings');
       const storageKey = 'wuyin-recordings-v1';
-      const themeStorageKey = 'wuyin-theme-v1';
       let audioContext;
       let octave = 4;
       let recording = null;
@@ -285,29 +284,6 @@
         if (audioContext.state === 'suspended') audioContext.resume();
         return audioContext;
       }
-      function applyTheme(theme) {
-        const isDark = theme === 'dark';
-        root.dataset.theme = isDark ? 'dark' : 'light';
-        themeMeta.content = isDark ? '#0f1518' : '#f4f3ee';
-        themeToggle.textContent = isDark ? '☀' : '☾';
-        themeToggle.setAttribute('aria-label', isDark ? '切换日间模式' : '切换夜间模式');
-        themeToggle.title = isDark ? '切换日间模式' : '切换夜间模式';
-      }
-      let savedTheme = 'dark';
-      try { savedTheme = localStorage.getItem(themeStorageKey) === 'light' ? 'light' : 'dark'; } catch {}
-      applyTheme(savedTheme);
-      themeToggle.addEventListener('click', () => {
-        const theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-        const bounds = themeToggle.getBoundingClientRect();
-        root.style.setProperty('--theme-origin-x', `${bounds.left + bounds.width / 2}px`);
-        root.style.setProperty('--theme-origin-y', `${bounds.top + bounds.height / 2}px`);
-        const updateTheme = () => {
-          applyTheme(theme);
-          try { localStorage.setItem(themeStorageKey, theme); } catch {}
-        };
-        if (typeof document.startViewTransition === 'function') document.startViewTransition(updateTheme);
-        else updateTheme();
-      });
       function frequencyFor(index) { return notes[index].frequency * Math.pow(2, octave - 4); }
       function makeVoice(index) {
         const ctx = getContext();
@@ -532,6 +508,6 @@
       renderRecordings();
     })();
   </script>
-  <script src="js/player.js?v=22"></script>
+  <script src="js/player.js?v=23"></script>
 </body>
 </html>

@@ -126,6 +126,7 @@
     ui.muteBtn = bar.querySelector('#playerMute');
     ui.listToggle = bar.querySelector('#playerListToggle');
     ui.list = bar.querySelector('#playerList');
+    ui.musicList = document.getElementById('musicPlaylist');
     ui.lyricsContainer = bar.querySelector('#playerLyrics');
     ui.explain = bar.querySelector('#playerExplain');
   }
@@ -202,20 +203,26 @@
   }
 
   function renderPlaylist() {
-    ui.list.innerHTML = playlist.map((song, i) =>
+    const markup = playlist.map((song, i) =>
       `<div class="player-list-item${i === currentIndex ? ' active' : ''}" data-index="${i}">
         <span class="player-list-title">${escapeHtml(song.title)}</span>
         <span class="player-list-artist">${escapeHtml(song.artist || '')}</span>
       </div>`
     ).join('');
-    ui.list.querySelectorAll('.player-list-item').forEach(el => {
-      el.addEventListener('click', function () {
-        const idx = parseInt(this.dataset.index);
-        if (idx !== currentIndex) {
-          currentIndex = idx;
-          loadAndPlay();
-        }
-        ui.list.classList.remove('open');
+    [ui.list, ui.musicList].forEach(function (list) {
+      if (!list) return;
+      list.innerHTML = markup;
+      list.querySelectorAll('.player-list-item').forEach(function (el) {
+        el.addEventListener('click', function () {
+          const idx = parseInt(this.dataset.index, 10);
+          if (idx !== currentIndex) {
+            currentIndex = idx;
+            loadAndPlay();
+          } else if (!audio) {
+            loadAndPlay();
+          }
+          ui.list.classList.remove('open');
+        });
       });
     });
   }

@@ -27,6 +27,22 @@
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f5f8fc;
+  --panel: #ffffff;
+  --panel-soft: #edf4fb;
+  --text: #17283d;
+  --muted: #607286;
+  --faint: #91a1b1;
+  --line: #d9e4ef;
+  --accent: #2f6fba;
+  --accent-strong: #1f58a0;
+  --accent-soft: rgba(47, 111, 186, 0.1);
+  --accent-cool: #4d9ac6;
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 18px 50px rgba(46, 83, 122, 0.1);
+}
+
 /* ---------- 基础 ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -35,7 +51,7 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f1518 0%, #121b1f 52%, #10171a 100%);
+  background: var(--bg);
   color: var(--text);
   font-family: var(--font-display);
   overflow-x: hidden;
@@ -62,6 +78,13 @@ body {
 
 body.playing .player-glow { opacity: 1; }
 
+:root[data-theme="light"] .player-glow {
+  background:
+    radial-gradient(ellipse 45% 38% at 28% 18%, rgba(47, 111, 186, 0.22), transparent 70%),
+    radial-gradient(ellipse 40% 32% at 72% 22%, rgba(77, 154, 198, 0.16), transparent 70%),
+    radial-gradient(ellipse 60% 45% at 50% 45%, rgba(47, 111, 186, 0.08), transparent 70%);
+}
+
 @keyframes glow-sway {
   0%, 100% { transform: translate3d(-2.5%, -1%, 0) rotate(0deg); }
   25%      { transform: translate3d(1.5%, 2%, 0) rotate(0.8deg); }
@@ -80,9 +103,14 @@ body::before {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.35;
+  opacity: 0.2;
   background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
   background-size: 3px 3px;
+}
+
+:root[data-theme="light"] body::before {
+  opacity: 0.3;
+  background-image: radial-gradient(rgba(47, 111, 186, 0.08) 1px, transparent 1px);
 }
 
 /* 顶部黄铜刻线 */
@@ -182,6 +210,30 @@ main {
 }
 
 .nav a:hover::after { width: 100%; }
+
+.site-theme-toggle {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--panel);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.95rem;
+  line-height: 1;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease), background 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.site-theme-toggle:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  transform: rotate(12deg);
+}
 
 /* ---------- Hero ---------- */
 .hero {
@@ -774,7 +826,7 @@ code {
   align-items: center;
   gap: 16px;
   padding: 12px 22px;
-  background: rgba(15, 21, 24, 0.94);
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-top: 1px solid var(--line);
@@ -835,7 +887,7 @@ code {
 
 .player-btn:hover:not(:disabled) {
   color: var(--text);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--accent-soft);
 }
 
 .player-play-btn {
@@ -975,7 +1027,7 @@ body.seeking * { user-select: none !important; }
   transition: background 0.2s var(--ease);
 }
 
-.player-list-item:hover { background: rgba(255, 255, 255, 0.04); }
+.player-list-item:hover { background: var(--panel-soft); }
 .player-list-item.active {
   background: var(--accent-soft);
   border-left: 2px solid var(--accent);
@@ -1051,6 +1103,48 @@ body.seeking * { user-select: none !important; }
 .player-loading { color: var(--accent); }
 .player-error { color: #e98c7f; }
 
+/* The full playlist lives in the music studio; the bottom bar stays compact. */
+.music-page #playerListToggle,
+.music-page #playerList { display: none; }
+
+.music-playlist {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.music-playlist-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.music-playlist-title { margin: 0; font-size: 1rem; color: var(--text); }
+.music-playlist-hint { margin: 0; color: var(--muted); font-size: 0.75rem; }
+.music-playlist-list { display: grid; gap: 6px; }
+
+.music-playlist .player-list-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 48px;
+  padding: 9px 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+.music-playlist .player-list-item:hover { background: var(--panel-soft); }
+.music-playlist .player-list-item.active { border-color: var(--accent); }
+.music-playlist .player-list-title { font-size: 0.86rem; }
+.music-playlist .player-list-artist { font-size: 0.75rem; text-align: right; }
+
 /* ---------- 响应式 ---------- */
 @media (max-width: 768px) {
   .site-header,
@@ -1062,6 +1156,8 @@ body.seeking * { user-select: none !important; }
     flex-direction: column;
     gap: 14px;
   }
+
+  .site-theme-toggle { position: absolute; top: 26px; right: 0; }
 
   .hero {
     padding-top: 64px;
@@ -1117,6 +1213,7 @@ body.seeking * { user-select: none !important; }
 
 @media (max-width: 640px) {
   .nav {
+    padding-right: 48px;
     gap: 18px;
     font-size: 0.82rem;
     flex-wrap: wrap;
@@ -1168,6 +1265,11 @@ body.seeking * { user-select: none !important; }
     left: 0;
     border-radius: 0;
   }
+
+  .music-playlist { padding: 16px; }
+  .music-playlist-head { align-items: flex-start; flex-direction: column; gap: 4px; }
+  .music-playlist .player-list-item { align-items: flex-start; flex-direction: column; gap: 3px; }
+  .music-playlist .player-list-artist { text-align: left; }
 }
 
 /* 尊重减弱动效偏好 */
@@ -1182,3 +1284,11 @@ body.seeking * { user-select: none !important; }
 
   html { scroll-behavior: auto; }
 }
+
+@keyframes theme-ripple {
+  from { clip-path: circle(0 at var(--theme-origin-x) var(--theme-origin-y)); }
+  to { clip-path: circle(150vmax at var(--theme-origin-x) var(--theme-origin-y)); }
+}
+
+::view-transition-old(root) { animation: none; z-index: 1; }
+::view-transition-new(root) { animation: theme-ripple 620ms cubic-bezier(.22, .8, .25, 1) both; z-index: 2; }
