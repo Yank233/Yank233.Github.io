@@ -4,68 +4,44 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Python 项目里 .venv 虚拟环境的创建、管理与清理经验。">
-  <script src="../js/theme.js?v=1"></script>
-  <title>.venv 虚拟环境管理 - Yank's Blog</title>
-  <link rel="stylesheet" href="../css/style.css?v=16">
+  <meta name="theme-color" content="#F8F9FA">
+  <title>.venv 虚拟环境管理 · Yank's Blog</title>
+  <link rel="icon" href="../assets/yank-mark.svg" type="image/svg+xml">
+  <link rel="preload" href="../assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/site.css">
+  <script type="module" src="../js/swarm/app.js"></script>
 </head>
-<body>
-  <header class="site-header">
-    <a class="brand" href="../index.html">Yank's Blog</a>
-    <nav class="nav" aria-label="主导航">
-      <a href="../index.html">首页</a>
-      <a href="../posts.html">文章</a>
-      <a href="../about.html">关于</a>
-      <a href="../project.html">项目</a>
-      <a href="../links.html">友链</a>
-      <a href="../music.html" data-no-spa>音乐</a>
-    </nav>
-    <button class="site-theme-toggle" type="button" data-theme-toggle aria-label="切换日间模式" title="切换日间模式">☀</button>
-  </header>
+<body class="blog-site article-page" data-page="article">
+  <div id="root" aria-label="由协作光标搭建的博客"></div>
+  <a class="sw-skip-link sw-button sw-button--small" href="#main">跳至正文</a>
+  <div class="site-shell">
+    <header class="blog-header">
+      <a class="sw-brand" href="../index.html" aria-label="Yank's Blog 首页"><svg viewBox="0 0 24 28" aria-hidden="true"><path d="M0 0h7l5 9 5-9h7l-9 16v12H9V16Z" fill="currentColor"/></svg><span>Yank's Blog<span class="brand-period">.</span></span></a>
+      <nav class="blog-nav" aria-label="主导航"><a href="../index.html">首页</a><a href="../posts.html" aria-current="page">文章</a><a href="../project.html">项目</a><a href="../about.html">关于</a><a href="../links.html">友链</a></nav>
+      <a class="sw-button sw-button--small header-github" href="https://github.com/Yank233" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+    </header>
+    <main id="main" tabindex="-1"><div class="article-breadcrumb"><a href="../posts.html">← 全部文章</a><span class="mono">NOTES / 01</span></div><article><header class="article-heading" data-build="text"><div class="post-meta"><span class="category">技术笔记</span><time datetime="2026-08-22">2026.08.22</time></div><h1>.venv 虚拟环境管理</h1><p class="article-summary">虽然还没到依赖互相打架的地步，但好习惯要提前养成，这样传Github的也不至于是依托彻底的大粪</p><a class="article-author" href="../about.html"><img src="../assets/profile.jpg" alt="" width="32" height="32"><span>Yank</span><span class="mono">/ 2 MIN READ</span></a></header><div class="article-layout"><aside class="article-aside"><p class="mono">ON THIS PAGE</p><nav aria-label="文章目录"><a href="#article-content">正文</a><a href="#section-1">创建与激活</a><a href="#section-2">依赖管理</a><a href="#section-3">清理与重建</a></nav><p class="aside-note">记录探索，<br>也记录过程。</p></aside><div class="article-body" id="article-content"><p>刚开始全都是全局pip装包，万一某个项目要 requests 2.x、另一个要 3.x，装来装去把系统环境搞成一锅粥。</p>
 
-  <main class="article">
-    <a class="back-link" href="../posts.html">← 返回文章列表</a>
-    <article>
-      <header class="article-header">
-        <p class="eyebrow">2026-08-22</p>
-        <h1>.venv 虚拟环境管理</h1>
-        <p class="summary">虽然还没到依赖互相打架的地步，但好习惯要提前养成，这样传Github的也不至于是依托彻底的大粪</p>
-      </header>
-
-      <p>刚开始全都是全局pip装包，万一某个项目要 requests 2.x、另一个要 3.x，装来装去把系统环境搞成一锅粥。</p>
-
-      <h2>创建与激活</h2>
+      <h2 id="section-1">创建与激活</h2>
       <p>Python 3.3+ 自带 venv 模块，不需要额外安装。在项目根目录执行：</p>
-      <p><code>python -m venv .venv</code></p>
+      <p class="article-command"><code>python -m venv .venv</code></p>
       <p>Windows 下激活：<code>.venv\Scripts\activate</code></p>
       <p>激活后命令行提示符会多出 <code>(.venv)</code> 前缀，这时 <code>pip install</code> 装的所有包都会进到 .venv 里，而不是全局。</p>
 
-      <h2>依赖管理</h2>
+      <h2 id="section-2">依赖管理</h2>
       <p>装好依赖后立刻导出清单，方便换机器或重建环境：</p>
-      <p><code>pip freeze &gt; requirements.txt</code></p>
+      <p class="article-command"><code>pip freeze &gt; requirements.txt</code></p>
       <p>换到新环境后一条命令装回来：<code>pip install -r requirements.txt</code>。requirements.txt 应该提交到 git，这样别人克隆仓库后能一键复现。</p>
 
-      <h2>清理与重建</h2>
+      <h2 id="section-3">清理与重建</h2>
       <p>.venv 目录本身不提交到 git（加进 .gitignore 即可）。如果环境装坏了，最省事的办法是直接删掉重建：</p>
       <p><code>rm -rf .venv</code> 然后重新 <code>python -m venv .venv</code></p>
-      <p>反正依赖都在 requirements.txt 里，重建成本很低。这也是"一切皆可重来"的底气。</p>
-
-      <!--
-      评论
-      接入 Giscus、Waline 或 Twikoo，脚本位置。
-      -->
-    </article>
-  </main>
-
-  <footer class="site-footer">
-    <p>© 2026 Yank.</p>
-    <span class="busuanzi">
-      <span id="busuanzi_value_site_pv">·</span> 次浏览 · <span id="busuanzi_value_site_uv">·</span> 位访客
-    </span>
-  </footer>
-  <script src="../js/B_word.js?v=2"></script>
-  <script src="../js/player.js?v=23"></script>
-  <script src="../js/nav.js?v=6"></script>
-  <script src="../js/animations.js?v=6"></script>
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+      <p>反正依赖都在 requirements.txt 里，重建成本很低。这也是"一切皆可重来"的底气。</p><div class="article-end mono"><span></span> END OF NOTE</div></div></div></article><nav class="article-pagination" aria-label="相邻文章"><a href="../posts.html"><span class="mono">← BACK TO ARCHIVE</span><strong>回到文章列表</strong></a><a href="post2.html"><span class="mono">OLDER NOTE →</span><strong>友链搭建</strong></a></nav></main>
+    <footer class="blog-footer">
+      <div class="footer-main"><a class="sw-brand" href="../index.html"><svg viewBox="0 0 24 28" aria-hidden="true"><path d="M0 0h7l5 9 5-9h7l-9 16v12H9V16Z" fill="currentColor"/></svg><span>Yank's Blog.</span></a><p>记录技术、生活和思考。<br>保持好奇，慢慢搭建。</p></div>
+      <nav aria-label="页脚导航"><a href="../posts.html">文章归档</a><a href="../about.html">关于我</a><a href="mailto:3051258379@qq.com">联系我 <span aria-hidden="true">↗</span></a><a href="#main">回到顶部 ↑</a></nav>
+      <div class="footer-bottom"><span>© 2026 Yank.</span><span class="mono">一个持续搭建中的个人空间。</span></div>
+    </footer>
+  </div>
 </body>
 </html>

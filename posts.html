@@ -1,74 +1,43 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Yank 的文章列表。">
-  <script src="js/theme.js?v=1"></script>
-  <title>文章 - Yank's Blog</title>
-  <link rel="stylesheet" href="css/style.css?v=16">
+  <meta name="description" content="Yank 的技术笔记、博客开发记录和生活随笔。">
+  <meta name="theme-color" content="#F8F9FA">
+  <title>文章 · Yank's Blog</title>
+  <link rel="icon" href="assets/yank-mark.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/site.css">
+  <script type="module" src="js/swarm/app.js"></script>
 </head>
-<body>
-  <header class="site-header">
-    <a class="brand" href="index.html">Yank's Blog</a>
-    <nav class="nav" aria-label="主导航">
-      <a href="index.html">首页</a>
-      <a href="posts.html">文章</a>
-      <a href="about.html">关于</a>
-      <a href="project.html">项目</a>
-      <a href="links.html">友链</a>
-      <a href="music.html" data-no-spa>音乐</a>
-    </nav>
-    <button class="site-theme-toggle" type="button" data-theme-toggle aria-label="切换日间模式" title="切换日间模式">☀</button>
-  </header>
-
-  <main class="page">
-    <p class="eyebrow">Archive</p>
-    <h1>文章</h1>
-    <div class="post-list">
-      <!-- POST_ENTRY -->
-      <article class="post-card">
-        <time datetime="2026-10-26">2026-10-26</time>
-        <h2><a href="posts/post5.html">博客新增功能：五音音乐工作室</a></h2>
-        <p>刷 Bilibili 看到类似的音乐小工具，于是也给博客搓了一个五音</p>
-      </article>
-
-      <article class="post-card">
-        <time datetime="2026-08-22">2026-08-22</time>
-        <h2><a href="posts/post4.html">.venv 虚拟环境管理</a></h2>
-        <p>虽然还没到依赖互相打架的地步，但好习惯要提前养成</p>
-      </article>
-
-      <article class="post-card">
-        <time datetime="2026-07-29">2026-07-29</time>
-        <h2><a href="posts/post3.html">博客新增功能：歌曲播放与歌词展示</a></h2>
-        <p>给博客加了背景音乐播放器和歌词同步显示，顺便整理了整体样式</p>
-      </article>
-
-      <article class="post-card">
-        <time datetime="2026-06-08">2026-06-08</time>
-        <h2><a href="posts/post2.html">友链搭建</a></h2>
-        <p>友链已经基本成型，拉几个好友试试水</p>
-      </article>
-      <article class="post-card">
-        <time datetime="2026-06-04">2026-06-04</time>
-        <h2><a href="posts/post1.html">我的第一篇文章</a></h2>
-        <p>按道理这一篇应该是占位符来着？</p>
-      </article>
-      
-    </div>
-  </main>
-
-  <footer class="site-footer">
-    <p>© 2026 Yank.</p>
-    <span class="busuanzi">
-      <span id="busuanzi_value_site_pv">·</span> 次浏览 · <span id="busuanzi_value_site_uv">·</span> 位访客
-    </span>
-  </footer>
-  <script src="js/B_word.js?v=2"></script>
-  <script src="js/player.js?v=23"></script>
-  <script src="js/nav.js?v=6"></script>
-  <script src="js/animations.js?v=6"></script>
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<body class="blog-site" data-page="posts">
+  <div id="root" aria-label="由协作光标搭建的博客"></div>
+  <a class="sw-skip-link sw-button sw-button--small" href="#main">跳至正文</a>
+  <div class="site-shell">
+    <header class="blog-header">
+      <a class="sw-brand" href="index.html" aria-label="Yank's Blog 首页"><svg viewBox="0 0 24 28" aria-hidden="true"><path d="M0 0h7l5 9 5-9h7l-9 16v12H9V16Z" fill="currentColor"/></svg><span>Yank's Blog<span class="brand-period">.</span></span></a>
+      <nav class="blog-nav" aria-label="主导航"><a href="index.html">首页</a><a href="posts.html" aria-current="page">文章</a><a href="project.html">项目</a><a href="about.html">关于</a><a href="links.html">友链</a></nav>
+      <a class="sw-button sw-button--small header-github" href="https://github.com/Yank233" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+    </header>
+    <main id="main" tabindex="-1"><header class="page-heading"><div data-build="text"><p class="section-label mono"><span>01</span> / ARCHIVE</p><h1>文章<span class="heading-dot">.</span></h1><p class="heading-description">把探索的过程留下来，给未来的自己一个路标。</p></div><div class="heading-stat mono" data-build="text"><strong>03</strong><span>ENTRIES / 2026</span></div></header><div class="archive-strip"><span class="mono">2026</span><span>技术笔记 · 博客开发 · 生活记录</span><span class="mono">NEWEST FIRST ↓</span></div><section aria-label="全部文章"><article class="post-row" data-build="panel">
+    <div class="post-index mono">01</div>
+    <div class="post-info"><div class="post-meta"><span class="category">技术笔记</span><time datetime="2026-08-22">2026.08.22</time></div><h2><a href="posts/post4.html">.venv 虚拟环境管理</a></h2><p>虽然还没到依赖互相打架的地步，但好习惯要提前养成</p></div>
+    <a class="row-arrow" href="posts/post4.html" aria-label="阅读：.venv 虚拟环境管理">↗</a>
+  </article><article class="post-row" data-build="panel">
+    <div class="post-index mono">02</div>
+    <div class="post-info"><div class="post-meta"><span class="category">生活记录</span><time datetime="2026-06-08">2026.06.08</time></div><h2><a href="posts/post2.html">友链搭建</a></h2><p>友链已经基本成型，拉几个好友试试水</p></div>
+    <a class="row-arrow" href="posts/post2.html" aria-label="阅读：友链搭建">↗</a>
+  </article><article class="post-row" data-build="panel">
+    <div class="post-index mono">03</div>
+    <div class="post-info"><div class="post-meta"><span class="category">随笔</span><time datetime="2026-06-04">2026.06.04</time></div><h2><a href="posts/post1.html">我的第一篇文章</a></h2><p>按道理这一篇应该是占位符来着？</p></div>
+    <a class="row-arrow" href="posts/post1.html" aria-label="阅读：我的第一篇自建博客文章">↗</a>
+  </article></section></main>
+    <footer class="blog-footer">
+      <div class="footer-main"><a class="sw-brand" href="index.html"><svg viewBox="0 0 24 28" aria-hidden="true"><path d="M0 0h7l5 9 5-9h7l-9 16v12H9V16Z" fill="currentColor"/></svg><span>Yank's Blog.</span></a><p>记录技术、生活和思考。<br>保持好奇，慢慢搭建。</p></div>
+      <nav aria-label="页脚导航"><a href="posts.html">文章归档</a><a href="about.html">关于我</a><a href="mailto:3051258379@qq.com">联系我 <span aria-hidden="true">↗</span></a><a href="#main">回到顶部 ↑</a></nav>
+      <div class="footer-bottom"><span>© 2026 Yank.</span><span class="mono">一个持续搭建中的个人空间。</span></div>
+    </footer>
+  </div>
 </body>
 </html>

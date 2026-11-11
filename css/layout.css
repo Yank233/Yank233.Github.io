@@ -1,0 +1,22 @@
+/* Flow layouts for future pages; the faithful animated homepage uses its own canvas. */
+.sw-container { width: min(calc(100% - var(--sw-page-gutter) * 2), var(--sw-content-width)); margin-inline: auto; }
+.sw-frame { border-inline: 1px solid var(--sw-line); }
+.sw-section { padding: clamp(2rem, 5vw, 4rem) var(--sw-space-6); border-bottom: 1px solid var(--sw-line); }
+.sw-section--ruled { position: relative; }
+.sw-stack { display: flex; flex-direction: column; gap: var(--sw-gap, 1.5rem); }
+.sw-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sw-gap, .75rem); }
+.sw-split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sw-gap, 4rem); align-items: start; }
+.sw-grid { display: grid; grid-template-columns: repeat(var(--sw-columns, 3), minmax(0, 1fr)); gap: var(--sw-gap, 1.5rem); }
+.sw-grid > *, .sw-split > * { min-width: 0; }
+.sw-rule-grid { display: grid; grid-template-columns: repeat(var(--sw-columns, 3), minmax(0, 1fr)); gap: 1px; background: var(--sw-line); border-bottom: 1px solid var(--sw-line); }
+.sw-rule-grid > * { background: var(--sw-paper); padding: var(--sw-space-6); }
+.sw-page-header { padding-block: var(--sw-space-7); border-bottom: 1px solid var(--sw-line); }
+.sw-page-footer { padding: var(--sw-space-6); border-top: 1px solid var(--sw-line); }
+@media (max-width: 800px) {
+  .sw-grid, .sw-rule-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sw-split { grid-template-columns: 1fr; gap: 2rem; }
+}
+@media (max-width: 520px) {
+  .sw-grid, .sw-rule-grid { grid-template-columns: minmax(0, 1fr); }
+  .sw-section, .sw-rule-grid > *, .sw-page-footer { padding-inline: 1.25rem; }
+}

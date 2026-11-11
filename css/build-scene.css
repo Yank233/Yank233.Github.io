@@ -1,0 +1,27 @@
+/* Visual construction layer. Flow layout and semantic content stay in the HTML. */
+[data-build-state='waiting'] { visibility: hidden; }
+[data-build-detail] { opacity: var(--build-detail-opacity, 0); }
+.build-stage { position: fixed; inset: 0; z-index: 60; pointer-events: none; overflow: hidden; }
+.build-stage svg.build-guides { width: 100%; height: 100%; overflow: visible; }
+.build-cursor { position: absolute; top: 0; left: 0; width: 28px; height: 28px; will-change: transform; transition: opacity 200ms ease; }
+.build-cursor svg { overflow: visible; filter: drop-shadow(0 1px 1.5px #00000047); }
+.build-logo { position: absolute; left: 50%; top: 50%; width: 44px; height: 52px; transform: translate(-50%,-50%); color: var(--sw-line); transition: opacity 300ms ease, transform 300ms ease; }
+.build-logo.is-gone { opacity: 0; transform: translate(-50%,-50%) scale(.92); }
+.build-ruler { position: absolute; background: #2C2C2C; transition: opacity 200ms ease; opacity: 0; }
+.build-stage.is-working .build-ruler { opacity: 1; }
+.build-ruler--top { top: 0; left: 0; width: 100%; height: 18px; }
+.build-ruler--left { top: 18px; left: 0; width: 18px; height: calc(100% - 18px); }
+.build-ruler text { fill: #999; font: 8px var(--sw-font-mono); }
+.build-ruler line { stroke: #656565; stroke-width: 1; }
+.build-skip { position: fixed; right: 22px; bottom: 22px; z-index: 70; color: var(--sw-muted); border: 1px solid var(--sw-line); background: var(--sw-paper); border-radius: 6px; padding: 8px 12px; font: 11px/1.5 var(--sw-font-sans); cursor: pointer; }
+.build-skip:hover { color: var(--sw-ink); }
+@media (max-width:760px) {
+  .build-ruler--top { height: 14px; }
+  .build-ruler--left { width: 14px; top: 14px; height: calc(100% - 14px); }
+  .build-skip { bottom: 14px; right: 14px; font-size: 10px; }
+}
+@media (prefers-reduced-motion:reduce), print {
+  [data-build-state='waiting'] { visibility: visible; }
+  [data-build-detail] { opacity: 1; }
+  .build-stage, .build-skip { display: none; }
+}

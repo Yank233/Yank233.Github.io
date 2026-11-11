@@ -1,0 +1,36 @@
+/* Exact scene styles. All generic source class names are isolated to this root. */
+.swarm-site { overflow-x: clip; }
+.swarm-site .page { position: relative; width: 100%; overflow: clip; display: flow-root; }
+.swarm-site .canvas { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+.swarm-site .nav-sticky { position: sticky; top: 0; z-index: var(--sw-layer-nav); }
+.swarm-site .nav-backdrop { position: absolute; inset: 0; background: var(--sw-paper); }
+.swarm-site .nav-canvas { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+.swarm-site .paths { position: absolute; inset: 0; overflow: visible; }
+.swarm-site .el-text { position: absolute; font-feature-settings: 'cv11', 'ss01'; }
+.swarm-site .el-rect { position: absolute; transition: background-color .22s ease, border-radius .22s ease, box-shadow .22s ease; }
+.swarm-site .text-sel { background: var(--sw-selection-fill); }
+.swarm-site .caret { display: inline-block; width: 1px; margin-left: 1px; vertical-align: text-bottom; background: currentColor; animation: sw-caret-blink 1s steps(1) infinite; }
+.swarm-site .overlay, .swarm-site .cursors { position: absolute; top: 0; left: 0; width: 100%; pointer-events: none; }
+.swarm-site .overlay { z-index: var(--sw-layer-selection); }
+.swarm-site .overlay svg { position: absolute; inset: 0; overflow: visible; }
+.swarm-site .cursors { z-index: var(--sw-layer-cursor); }
+.swarm-site .badge { position: absolute; transform: translate(-50%); padding: 1px 4px; border-radius: 2px; color: #FFF; font: 600 11px/16px Inter, system-ui, sans-serif; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.swarm-site .cursor { position: absolute; top: 0; left: 0; will-change: transform; }
+.swarm-site .cursor svg { position: absolute; overflow: visible; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,.28)); }
+.swarm-site .cursor-label { position: absolute; padding: 2px 6px; border-radius: 4px; font: 600 11px/15px Inter, system-ui, sans-serif; white-space: nowrap; box-shadow: 0 1px 2px #0000002E; }
+.swarm-site .ruler { position: fixed; z-index: var(--sw-layer-ruler); background: var(--sw-ruler); pointer-events: none; }
+.swarm-site .ruler-top { top: 0; left: 0; right: 0; height: 20px; border-bottom: 1px solid var(--sw-ruler-line); }
+.swarm-site .ruler-left { top: 0; left: 0; bottom: 0; width: 20px; border-right: 1px solid var(--sw-ruler-line); }
+.swarm-site .ruler svg { display: block; }
+.swarm-site .ruler-corner { position: fixed; z-index: 21; top: 0; left: 0; width: 20px; height: 20px; background: var(--sw-ruler); }
+.swarm-site .rtext { font: 500 9px Inter, system-ui, sans-serif; fill: var(--sw-ruler-ink); }
+.swarm-site .rsel { fill: var(--sw-selection); }
+.swarm-site .intro-logo { position: fixed; left: 50%; top: 50%; transform: translate(-50%,-50%); pointer-events: none; transition: opacity .35s ease, transform .35s ease; }
+.swarm-site .intro-logo.gone { opacity: 0; transform: translate(-50%,-50%) scale(.92); }
+.swarm-site .scene-actions { position: absolute; inset: 0; z-index: 31; pointer-events: none; }
+.swarm-site .scene-action { position: absolute; display: block; background: transparent; border-radius: 8px; pointer-events: auto; cursor: pointer; text-decoration: none; }
+.swarm-site .scene-action:focus-visible { outline: 2px solid var(--sw-selection); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) {
+  .swarm-site .caret { animation: none; }
+  .swarm-site .el-rect, .swarm-site .intro-logo { transition: none; }
+}

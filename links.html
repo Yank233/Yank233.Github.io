@@ -3,63 +3,29 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Yank 的好友们。">
-  <script src="js/theme.js?v=1"></script>
-  <title>友链 - Yank's Blog</title>
-  <link rel="stylesheet" href="css/style.css?v=16">
+  <meta name="description" content="Yank 的好友们与值得停留的独立小站。">
+  <meta name="theme-color" content="#F8F9FA">
+  <title>友链 · Yank's Blog</title>
+  <link rel="icon" href="assets/yank-mark.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/site.css">
+  <script type="module" src="js/swarm/app.js"></script>
 </head>
-<body>
-  <header class="site-header">
-    <a class="brand" href="index.html">Yank's Blog</a>
-    <nav class="nav" aria-label="主导航">
-      <a href="index.html">首页</a>
-      <a href="posts.html">文章</a>
-      <a href="about.html">关于</a>
-      <a href="project.html">项目</a>
-      <a href="links.html">友链</a>
-      <a href="music.html" data-no-spa>音乐</a>
-    </nav>
-    <button class="site-theme-toggle" type="button" data-theme-toggle aria-label="切换日间模式" title="切换日间模式">☀</button>
-  </header>
-
-  <main class="page">
-    <p class="eyebrow">Friends</p>
-    <h1>友链</h1>
-    <div class="links-list">
-      <a href="https://blog.amitymc.com/" class="link-card" target="_blank">
-        <div class="link-card-title">
-          <strong>Momu2</strong>
-          <span class="link-url">https://blog.amitymc.com</span>
-        </div>
-        <p class="link-card-desc">欢迎来到Momu2的数字花园，记录学习、思考与创造。</p>
-      </a>
-      <a href="https://amitymc.com/" class="link-card" target="_blank">
-        <div class="link-card-title">
-          <strong>和睦小站</strong>
-          <span class="link-url">https://amitymc.com/</span>
-        </div>
-        <p class="link-card-desc">一个温馨、自由、充满创造力的 Minecraft 社区。<br>在这里，每一次冒险都值得被记录。</p>
-      </a>
-      <a href="https://leftjun.com/" class="link-card" target="_blank">
-        <div class="link-card-title">
-          <strong>LeftJun</strong>
-          <span class="link-url">https://leftjun.com/</span>
-        </div>
-        <p class="link-card-desc">因为山就在那里</p>
-      </a>
-    </div>
-  </main>
-
-  <footer class="site-footer">
-    <p>© 2026 Yank.</p>
-    <span class="busuanzi">
-      <span id="busuanzi_value_site_pv">·</span> 次浏览 · <span id="busuanzi_value_site_uv">·</span> 位访客
-    </span>
-  </footer>
-  <script src="js/B_word.js?v=2"></script>
-  <script src="js/player.js?v=23"></script>
-  <script src="js/nav.js?v=6"></script>
-  <script src="js/animations.js?v=6"></script>
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<body class="blog-site" data-page="links">
+  <div id="root" aria-label="由协作光标搭建的博客"></div>
+  <a class="sw-skip-link sw-button sw-button--small" href="#main">跳至正文</a>
+  <div class="site-shell">
+    <header class="blog-header">
+      <a class="sw-brand" href="index.html" aria-label="Yank's Blog 首页"><svg viewBox="0 0 24 28" aria-hidden="true"><path d="M0 0h7l5 9 5-9h7l-9 16v12H9V16Z" fill="currentColor"/></svg><span>Yank's Blog<span class="brand-period">.</span></span></a>
+      <nav class="blog-nav" aria-label="主导航"><a href="index.html">首页</a><a href="posts.html">文章</a><a href="project.html">项目</a><a href="about.html">关于</a><a href="links.html" aria-current="page">友链</a></nav>
+      <a class="sw-button sw-button--small header-github" href="https://github.com/Yank233" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+    </header>
+    <main id="main" tabindex="-1"><header class="page-heading"><div data-build="text"><p class="section-label mono"><span>04</span> / FRIENDS</p><h1>在别处，遇见<span class="heading-dot">.</span></h1><p class="heading-description">独立的小站，互相连接。这里有一些值得停留的地方。</p></div><div class="heading-stat mono" data-build="text"><strong>03</strong><span>CONNECTED SPACES</span></div></header><section class="friend-list" aria-label="友情链接"><a class="friend-row" data-build="panel" href="https://blog.amitymc.com/" target="_blank" rel="noopener noreferrer"><span class="friend-avatar" aria-hidden="true">M</span><div><span class="mono friend-type">01 / DIGITAL GARDEN</span><h2>Momu2</h2><p>欢迎来到 Momu2 的数字花园，记录学习、思考与创造。</p><span class="mono friend-url">https://blog.amitymc.com</span></div><span class="friend-arrow" aria-hidden="true">↗</span></a><a class="friend-row" data-build="panel" href="https://amitymc.com/" target="_blank" rel="noopener noreferrer"><span class="friend-avatar" aria-hidden="true">和</span><div><span class="mono friend-type">02 / MINECRAFT COMMUNITY</span><h2>和睦小站</h2><p>一个温馨、自由、充满创造力的 Minecraft 社区。<br>在这里，每一次冒险都值得被记录。</p><span class="mono friend-url">https://amitymc.com</span></div><span class="friend-arrow" aria-hidden="true">↗</span></a><a class="friend-row" data-build="panel" href="https://leftjun.com/" target="_blank" rel="noopener noreferrer"><span class="friend-avatar" aria-hidden="true">L</span><div><span class="mono friend-type">03 / PERSONAL SPACE</span><h2>LeftJun</h2><p>因为山就在那里</p><span class="mono friend-url">https://leftjun.com</span></div><span class="friend-arrow" aria-hidden="true">↗</span></a></section><section class="contact-section" data-build="panel"><div><p class="section-label mono"><span>05</span> / KEEP IN TOUCH</p><h2>让小站彼此相连。</h2><p>有什么想聊的，随时来信。</p></div><a class="sw-button" href="mailto:3051258379@qq.com">联系 Yank ↗</a></section></main>
+    <footer class="blog-footer">
+      <div class="footer-main"><a class="sw-brand" href="index.html"><svg viewBox="0 0 24 28" aria-hidden="true"><path d="M0 0h7l5 9 5-9h7l-9 16v12H9V16Z" fill="currentColor"/></svg><span>Yank's Blog.</span></a><p>记录技术、生活和思考。<br>保持好奇，慢慢搭建。</p></div>
+      <nav aria-label="页脚导航"><a href="posts.html">文章归档</a><a href="about.html">关于我</a><a href="mailto:3051258379@qq.com">联系我 <span aria-hidden="true">↗</span></a><a href="#main">回到顶部 ↑</a></nav>
+      <div class="footer-bottom"><span>© 2026 Yank.</span><span class="mono">一个持续搭建中的个人空间。</span></div>
+    </footer>
+  </div>
 </body>
 </html>

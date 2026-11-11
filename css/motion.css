@@ -1,0 +1,9 @@
+/* Optional flow-page reveal; elements remain visible if JavaScript is unavailable. */
+.sw-motion-ready [data-sw-reveal] { opacity: 0; transform: translateY(16px); transition: opacity 600ms var(--sw-ease), transform 600ms var(--sw-ease); transition-delay: var(--sw-delay, 0ms); }
+.sw-motion-ready [data-sw-reveal].is-visible { opacity: 1; transform: translateY(0); }
+@keyframes sw-caret-blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .sw-motion-ready [data-sw-reveal] { opacity: 1; transform: none; transition: none; }
+  .sw-button { transition: none; }
+  .sw-button:active { transform: none; }
+}

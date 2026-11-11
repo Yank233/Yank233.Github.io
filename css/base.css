@@ -1,0 +1,47 @@
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+html, body {
+  margin: 0;
+  background: var(--sw-paper);
+  color: var(--sw-ink);
+  -webkit-font-smoothing: antialiased;
+  font-family: var(--sw-font-sans);
+}
+body { min-width: 280px; }
+:where(button, input, textarea, select) { font: inherit; }
+:where(a, button, input, textarea, select, summary):focus-visible {
+  outline: 2px solid var(--sw-selection);
+  outline-offset: 4px;
+}
+.sw-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.sw-skip-link {
+  position: fixed;
+  z-index: 100;
+  top: 12px;
+  left: 12px;
+  transform: translateY(-150%);
+}
+.sw-skip-link:focus { transform: translateY(0); }
+/* Typography is opt-in, so headings/forms in unrelated pages are not reset. */
+.sw-h1, .sw-h2, .sw-h3, .sw-body, .sw-lead, .sw-eyebrow { margin: 0; }
+.sw-h1 { font-size: clamp(2.5rem, 5vw, var(--sw-text-h1)); font-weight: 600; line-height: 1.02; letter-spacing: -.035em; }
+.sw-h2 { font-size: clamp(1.875rem, 3.125vw, var(--sw-text-h2)); font-weight: 600; line-height: 1.08; letter-spacing: -.03em; }
+.sw-h3 { font-size: var(--sw-text-h3); font-weight: 600; line-height: 1.25; letter-spacing: -.012em; }
+.sw-lead { max-width: 42ch; font-size: var(--sw-text-lead); line-height: 1.5; letter-spacing: -.005em; color: var(--sw-muted); }
+.sw-body { font-size: var(--sw-text-body); line-height: var(--sw-leading-body); color: var(--sw-muted); }
+.sw-eyebrow, .sw-mono { font-family: var(--sw-font-mono); font-size: var(--sw-text-xs); line-height: 1.45; color: var(--sw-muted); }
+.sw-prose { max-width: 68ch; line-height: 1.65; color: var(--sw-muted); overflow-wrap: anywhere; }
+.sw-prose > :first-child { margin-top: 0; }
+.sw-prose > :last-child { margin-bottom: 0; }
+.sw-prose :where(h1,h2,h3,h4,strong) { color: var(--sw-ink); }
+.sw-prose :where(a) { color: var(--sw-accent); text-underline-offset: 3px; }

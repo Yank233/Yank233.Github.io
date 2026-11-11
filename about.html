@@ -1,92 +1,36 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Yank 的个人介绍。">
-  <script src="js/theme.js?v=1"></script>
-  <title>关于 - Yank's Blog</title>
-  <link rel="stylesheet" href="css/style.css?v=16">
+  <meta name="description" content="关于 Yank，爱折腾、喜欢整点小玩意的大一学生。">
+  <meta name="theme-color" content="#F8F9FA">
+  <title>关于 · Yank's Blog</title>
+  <link rel="icon" href="assets/yank-mark.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/site.css">
+  <script type="module" src="js/swarm/app.js"></script>
 </head>
-<body>
-  <header class="site-header">
-    <a class="brand" href="index.html">Yank's Blog</a>
-    <nav class="nav" aria-label="主导航">
-      <a href="index.html">首页</a>
-      <a href="posts.html">文章</a>
-      <a href="about.html">关于</a>
-      <a href="project.html">项目</a>
-      <a href="links.html">友链</a>
-      <a href="music.html" data-no-spa>音乐</a>
-    </nav>
-    <button class="site-theme-toggle" type="button" data-theme-toggle aria-label="切换日间模式" title="切换日间模式">☀</button>
-  </header>
-
-  <main class="page about-page">
-    <div class="profile-card">
-      <div class="profile-avatar">
-        <img src="assets/profile.jpg" alt="Yank 的头像">
-      </div>
-      <div class="profile-info">
-        <h1>Yank</h1>
-        <p class="profile-bio">爱折腾的大一小登，喜欢整点小玩意。</p>
-        <div class="social-links">
-          <a href="https://github.com/Yank233" class="social-link" target="_blank">GitHub</a>
-          <a href="https://space.bilibili.com/1472106962" class="social-link" target="_blank">Bilibili</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- 关于博客 -->
-    <section class="about-section">
-      <h2>📝 关于这个博客</h2>
-      <p>一个可以写技术笔记、生活记录和想法仓库的小项目。网站现在是纯静态结构，没有复杂框架，想改哪里就改哪里。</p>
-    </section>
-
-    <!-- 技能/标签 -->
-    <section class="about-section">
-      <h2>🛠️ 技术栈</h2>
-      <div class="skills">
-        <span class="skill-tag">HTML / CSS</span>
-        <span class="skill-tag">JavaScript</span>
-      </div>
-    </section>
-
-    <!-- 状态/日常 -->
-    <section class="about-section">
-      <h2>⚡ 状态</h2>
-      <ul class="status-list">
-        <li>🔨 正在做：博客页面优化、项目展示页</li>
-        <li>📖 最近在学：前端，算法竞赛</li>
-        <li>🎯 下一个目标：给博客加背景音乐和歌单</li>
-      </ul>
-    </section>
-
-    <section class="about-section murmur-section">
-      <h2>💭 碎碎念</h2>
-      <div class="murmur-grid" id="murmurGrid"></div>
-    </section>
-
-    <section class="about-section note">
-      <h2>📬 联系我</h2>
-      <p>如果有什么想聊的，可以通过下面的方式找到我：</p>
-      <ul>
-        <li>GitHub: <a href="https://github.com/Yank233">@Yank233</a></li>
-        <li>邮箱: <a href="mailto:3051258379@qq.com">3051258379@qq.com</a></li>
-      </ul>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <p>© 2026 Yank.</p>
-    <span class="busuanzi">
-      <span id="busuanzi_value_site_pv">·</span> 次浏览 · <span id="busuanzi_value_site_uv">·</span> 位访客
-    </span>
-  </footer>
-  <script src="js/B_word.js"></script>
-  <script src="js/player.js?v=23"></script>
-  <script src="js/nav.js?v=6"></script>
-  <script src="js/animations.js?v=6"></script>
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<body class="blog-site" data-page="about">
+  <div id="root" aria-label="由协作光标搭建的博客"></div>
+  <a class="sw-skip-link sw-button sw-button--small" href="#main">跳至正文</a>
+  <div class="site-shell">
+    <header class="blog-header">
+      <a class="sw-brand" href="index.html" aria-label="Yank's Blog 首页"><svg viewBox="0 0 24 28" aria-hidden="true"><path d="M0 0h7l5 9 5-9h7l-9 16v12H9V16Z" fill="currentColor"/></svg><span>Yank's Blog<span class="brand-period">.</span></span></a>
+      <nav class="blog-nav" aria-label="主导航"><a href="index.html">首页</a><a href="posts.html">文章</a><a href="project.html">项目</a><a href="about.html" aria-current="page">关于</a><a href="links.html">友链</a></nav>
+      <a class="sw-button sw-button--small header-github" href="https://github.com/Yank233" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+    </header>
+    <main id="main" tabindex="-1">
+  <section class="about-hero"><div class="about-copy" data-build="text"><p class="section-label mono"><span>02</span> / ABOUT ME</p><h1>嗨，我是<br>Yank<span class="heading-dot">.</span></h1><p class="about-bio">爱折腾的大一小登，<br>喜欢整点小玩意。</p><div class="social-actions"><a class="sw-button" href="https://github.com/Yank233" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a class="sw-button sw-button--secondary" href="https://space.bilibili.com/1472106962" target="_blank" rel="noopener noreferrer">Bilibili ↗</a></div></div><figure class="portrait-panel" data-build="panel"><img src="assets/profile.jpg" alt="Yank 的头像：戴着金色皇冠的小猫" width="1080" height="1080"><figcaption class="mono"><span>YANK / PERSONAL PROFILE</span><span>FIG. 01</span></figcaption></figure></section>
+  <section class="about-intro split-section"><div data-build="text"><p class="section-label mono"><span>01</span> / THIS LITTLE PLACE</p><h2>关于这个博客。</h2></div><div data-build="text"><p class="large-body">一个可以写技术笔记、生活记录和想法仓库的小项目。</p><p>网站现在是纯静态结构，没有复杂框架，想改哪里就改哪里。</p></div></section>
+  <div class="about-grid"><section data-build="panel"><p class="section-label mono"><span>02</span> / TOOLBOX</p><h2>边学，边做。</h2><p>从最基础的东西开始，一点点搭建。</p><div class="tags"><span>HTML / CSS</span><span>JavaScript</span></div></section><section data-build="panel"><p class="section-label mono"><span>03</span> / NOW & NEXT</p><h2>最近在忙什么。</h2><dl class="status-list"><div><dt>正在做</dt><dd>博客页面优化、项目展示页</dd></div><div><dt>最近在学</dt><dd>前端，算法竞赛</dd></div><div><dt>下一个目标</dt><dd>继续完善个人博客</dd></div></dl></section></div>
+  <section><div class="section-heading"><div data-build="text"><p class="section-label mono"><span>04</span> / SMALL THOUGHTS</p><h2>碎碎念。</h2></div><span class="mono faint">THOUGHTS, UNFILTERED.</span></div><div class="thought-grid"><blockquote data-build="text"><span class="quote-mark" aria-hidden="true">“</span><p>身后的乡土正在崩塌，面前的路途只有迷雾</p><span class="mono">NOTE / 01</span></blockquote><blockquote data-build="text"><span class="quote-mark" aria-hidden="true">“</span><p>去码头整点薯条</p><span class="mono">NOTE / 02</span></blockquote><blockquote data-build="text"><span class="quote-mark" aria-hidden="true">“</span><p>那无休止跳动的心脏，今天辛苦了</p><span class="mono">NOTE / 03</span></blockquote></div></section>
+  <section class="contact-section" data-build="panel"><div><p class="section-label mono"><span>05</span> / SAY HELLO</p><h2>有什么想聊的？</h2><p>可以通过下面的方式找到我。</p></div><div class="contact-links"><a href="mailto:3051258379@qq.com">3051258379@qq.com ↗</a><a href="https://github.com/Yank233" target="_blank" rel="noopener noreferrer">GitHub / @Yank233 ↗</a></div></section></main>
+    <footer class="blog-footer">
+      <div class="footer-main"><a class="sw-brand" href="index.html"><svg viewBox="0 0 24 28" aria-hidden="true"><path d="M0 0h7l5 9 5-9h7l-9 16v12H9V16Z" fill="currentColor"/></svg><span>Yank's Blog.</span></a><p>记录技术、生活和思考。<br>保持好奇，慢慢搭建。</p></div>
+      <nav aria-label="页脚导航"><a href="posts.html">文章归档</a><a href="about.html">关于我</a><a href="mailto:3051258379@qq.com">联系我 <span aria-hidden="true">↗</span></a><a href="#main">回到顶部 ↑</a></nav>
+      <div class="footer-bottom"><span>© 2026 Yank.</span><span class="mono">一个持续搭建中的个人空间。</span></div>
+    </footer>
+  </div>
 </body>
 </html>
